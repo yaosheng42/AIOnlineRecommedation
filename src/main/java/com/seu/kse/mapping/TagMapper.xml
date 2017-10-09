@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seu.kse.dao.TagMapper">
+  <resultMap id="BaseResultMap" type="com.seu.kse.bean.Tag">
+    <id column="tagName" jdbcType="VARCHAR" property="tagname" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from tag
+    where tagName = #{tagname,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.seu.kse.bean.Tag">
+    insert into tag (tagName)
+    values (#{tagname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.seu.kse.bean.Tag">
+    insert into tag
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="tagname != null">
+        tagName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="tagname != null">
+        #{tagname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <select id="selectByTagName"  resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    *
+     FROM
+    tag where tagName = #{tagname, jdbcType=VARCHAR}
+  </select>
+
+
+</mapper>
