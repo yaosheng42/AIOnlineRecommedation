@@ -56,6 +56,24 @@
           <include>**/*.xml</include>
         </includes>
       </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*.xml</include>
+          <include>*.properties</include>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/java</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.xml</include>
+        </includes>
+        <filtering>false</filtering>
+      </resource>
+
     </resources>
   </build>
 
@@ -195,39 +213,7 @@
       <artifactId>nd4j-native</artifactId>
       <version>0.8.0</version>
     </dependency>
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>app</artifactId>
-      <version>1.0</version>
-    </dependency>
 
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>core</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>app</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>dependency</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>common</artifactId>
-      <version>1.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.fnlp</groupId>
-      <artifactId>ham</artifactId>
-      <version>1.0</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/org.datavec/datavec-api -->
     <dependency>
       <groupId>org.datavec</groupId>
