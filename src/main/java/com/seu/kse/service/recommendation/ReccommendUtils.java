@@ -5,7 +5,7 @@ package com.seu.kse.service.recommendation;
 
 
 
-import org.fnlp.nlp.corpus.StopWords;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class ReccommendUtils {
     //根据论文的title 和摘要 计算论文相似度
 
     public static List<String>  stopwords;
-    public static StopWords sw;
+
     /**
      * 余弦相似度
      * @param paper1

@@ -44,9 +44,7 @@
   <listener>
     <listener-class>com.seu.kse.listener.RecommedationListener</listener-class>
   </listener>
-  <listener>
-    <listener-class>com.seu.kse.listener.TestConnectLister</listener-class>
-  </listener>
+
   <!--
     - Use the Cocoon debug filter together with the Cocoon demo webapp
   <filter-mapping>

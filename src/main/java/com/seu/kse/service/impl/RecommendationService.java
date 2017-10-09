@@ -63,8 +63,10 @@ public class RecommendationService {
     public void init(){
         try {
             paperDocument = new PaperDocument();
+            paperDocument.ToDocument(Configuration.sentencesFile);
             paper2Vec = new Paper2Vec();
             //训练模型
+            paper2Vec.modelByWord2vce();
             paper2Vec.calPaperVec();
             cmodel = new CBKNNModel(paper2Vec);
 

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="GBK"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -9,7 +9,7 @@
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd
                         http://www.springframework.org/schema/mvc
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-    <!-- è‡ªåŠ¨æ‰«æè¯¥åŒ…ï¼Œä½¿SpringMVCè®¤ä¸ºåŒ…ä¸‹ç”¨äº†@controlleræ³¨è§£çš„ç±»æ˜¯æŽ§åˆ¶å™¨ -->
+    <!-- ×Ô¶¯É¨Ãè¸Ã°ü£¬Ê¹SpringMVCÈÏÎª°üÏÂÓÃÁË@controller×¢½âµÄÀàÊÇ¿ØÖÆÆ÷ -->
     <context:annotation-config/>
     <context:component-scan base-package="com.seu.kse.controller">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
@@ -17,9 +17,9 @@
     <mvc:annotation-driven/>
 
 
-    <!-- å®šä¹‰è·³è½¬çš„æ–‡ä»¶çš„å‰åŽç¼€ ï¼Œè§†å›¾æ¨¡å¼é…ç½®-->
+    <!-- ¶¨ÒåÌø×ªµÄÎÄ¼þµÄÇ°ºó×º £¬ÊÓÍ¼Ä£Ê½ÅäÖÃ-->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <!-- è¿™é‡Œçš„é…ç½®æˆ‘çš„ç†è§£æ˜¯è‡ªåŠ¨ç»™åŽé¢actionçš„æ–¹æ³•returnçš„å­—ç¬¦ä¸²åŠ ä¸Šå‰ç¼€å’ŒåŽç¼€ï¼Œå˜æˆä¸€ä¸ª å¯ç”¨çš„urlåœ°å€ -->
+        <!-- ÕâÀïµÄÅäÖÃÎÒµÄÀí½âÊÇ×Ô¶¯¸øºóÃæactionµÄ·½·¨returnµÄ×Ö·û´®¼ÓÉÏÇ°×ººÍºó×º£¬±ä³ÉÒ»¸ö ¿ÉÓÃµÄurlµØÖ· -->
         <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />
     </bean>

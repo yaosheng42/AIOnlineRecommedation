@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="GBK"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:context="http://www.springframework.org/schema/context"
@@ -8,9 +9,9 @@
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd
                         http://www.springframework.org/schema/mvc
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
-    <!-- è‡ªåŠ¨æ‰«æ -->
+    <!-- ×Ô¶¯É¨Ãè -->
     <context:component-scan base-package="com.seu.kse" />
-    <!-- å¼•å…¥é…ç½®æ–‡ä»¶ -->
+    <!-- ÒýÈëÅäÖÃÎÄ¼þ -->
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="location" value="classpath:jdbc.properties" />
@@ -22,33 +23,33 @@
         <property name="url" value="${url}" />
         <property name="username" value="${username}" />
         <property name="password" value="${password}" />
-        <!-- åˆå§‹åŒ–è¿žæŽ¥å¤§å° -->
+        <!-- ³õÊ¼»¯Á¬½Ó´óÐ¡ -->
         <property name="initialSize" value="${initialSize}"></property>
-        <!-- è¿žæŽ¥æ± æœ€å¤§æ•°é‡ -->
+        <!-- Á¬½Ó³Ø×î´óÊýÁ¿ -->
         <property name="maxActive" value="${maxActive}"></property>
-        <!-- è¿žæŽ¥æ± æœ€å¤§ç©ºé—² -->
+        <!-- Á¬½Ó³Ø×î´ó¿ÕÏÐ -->
         <property name="maxIdle" value="${maxIdle}"></property>
-        <!-- è¿žæŽ¥æ± æœ€å°ç©ºé—² -->
+        <!-- Á¬½Ó³Ø×îÐ¡¿ÕÏÐ -->
         <property name="minIdle" value="${minIdle}"></property>
-        <!-- èŽ·å–è¿žæŽ¥æœ€å¤§ç­‰å¾…æ—¶é—´ -->
+        <!-- »ñÈ¡Á¬½Ó×î´óµÈ´ýÊ±¼ä -->
         <property name="maxWait" value="${maxWait}"></property>
 
     </bean>
 
-    <!-- springå’ŒMyBatiså®Œç¾Žæ•´åˆï¼Œä¸éœ€è¦mybatisçš„é…ç½®æ˜ å°„æ–‡ä»¶ -->
+    <!-- springºÍMyBatisÍêÃÀÕûºÏ£¬²»ÐèÒªmybatisµÄÅäÖÃÓ³ÉäÎÄ¼þ -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
-        <!-- è‡ªåŠ¨æ‰«æmapping.xmlæ–‡ä»¶ -->
+        <!-- ×Ô¶¯É¨Ãèmapping.xmlÎÄ¼þ -->
         <property name="mapperLocations" value="classpath:com/seu/kse/mapping/*.xml"></property>
     </bean>
 
-    <!-- DAOæŽ¥å£æ‰€åœ¨åŒ…åï¼ŒSpringä¼šè‡ªåŠ¨æŸ¥æ‰¾å…¶ä¸‹çš„ç±» -->
+    <!-- DAO½Ó¿ÚËùÔÚ°üÃû£¬Spring»á×Ô¶¯²éÕÒÆäÏÂµÄÀà -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.seu.kse.dao" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
 
-    <!-- (äº‹åŠ¡ç®¡ç†)transaction manager, use JtaTransactionManager for global tx -->
+    <!-- (ÊÂÎñ¹ÜÀí)transaction manager, use JtaTransactionManager for global tx -->
     <bean id="transactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource" />
