@@ -27,4 +27,7 @@
     （否则有可能出现 java.lang.UnsatisfiedLinkError: no jniopenblas in java.library.path 错误）
     3. 在Deployment选项卡 添加 war包，这里有2个war ，必须选择 AIOnlineRecommedation:war exploded Application context默认为/（该属性即为该网站的根目录）
     4. 选择该配置项运行即可，启动时间较长，每次启动会重新训练推荐模型。
-    
+
+## 5. 数据库搭建
+
+## 6. 爬虫程序定时启动设置
