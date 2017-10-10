@@ -4,7 +4,7 @@
     使用git的命令行版本拉取项目  
     clone http://39.108.155.139/yaosheng/AIOnlineRecommedation.git
 
-### 方法二
+### 方法二：
     使用IDEA直接从git导入项目
     1. File -> New -> Project from version control -> git 
     2. 输入下列值
