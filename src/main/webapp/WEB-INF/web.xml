@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="GBK"?>
 <!--
   Licensed to the Apache Software Foundation (ASF) under one or more
   contributor license agreements.  See the NOTICE file distributed with
@@ -30,7 +30,7 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring-mybatis.xml</param-value>
   </context-param>
-  <!-- é˜²æ­¢Springå†…å­˜æº¢å‡ºç›‘å¬å™¨ -->
+  <!-- ·ÀÖ¹SpringÄÚ´æÒç³ö¼àÌýÆ÷ -->
   <listener>
     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
   </listener>
@@ -66,7 +66,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>SpringMVC-servlet</servlet-name>
-    <!-- æ­¤å¤„å¯ä»¥å¯ä»¥é…ç½®æˆ*.doï¼Œå¯¹åº”strutsçš„åŽç¼€ä¹ æƒ¯ -->
+    <!-- ´Ë´¦¿ÉÒÔ¿ÉÒÔÅäÖÃ³É*.do£¬¶ÔÓ¦strutsµÄºó×ºÏ°¹ß -->
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   <welcome-file-list>

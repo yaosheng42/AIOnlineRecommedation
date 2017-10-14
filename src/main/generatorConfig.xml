@@ -1,36 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="GBK"?>
 <!DOCTYPE generatorConfiguration
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <!-- æ•°æ®åº“é©±åŠ¨-->
+    <!-- Êý¾Ý¿âÇý¶¯-->
     <classPathEntry  location="mysql-connector-java-5.1.30.jar"/>
     <context id="DB2Tables"  targetRuntime="MyBatis3">
         <commentGenerator>
             <property name="suppressDate" value="true"/>
-            <!-- æ˜¯å¦åŽ»é™¤è‡ªåŠ¨ç”Ÿæˆçš„æ³¨é‡Š trueï¼šæ˜¯ ï¼š false:å¦ -->
+            <!-- ÊÇ·ñÈ¥³ý×Ô¶¯Éú³ÉµÄ×¢ÊÍ true£ºÊÇ £º false:·ñ -->
             <property name="suppressAllComments" value="true"/>
         </commentGenerator>
-        <!--æ•°æ®åº“é“¾æŽ¥URLï¼Œç”¨æˆ·åã€å¯†ç  -->
+        <!--Êý¾Ý¿âÁ´½ÓURL£¬ÓÃ»§Ãû¡¢ÃÜÂë -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost/reasearch_kg" userId="root" password="yaosheng">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
-        <!-- ç”Ÿæˆæ¨¡åž‹çš„åŒ…åå’Œä½ç½®-->
+        <!-- Éú³ÉÄ£ÐÍµÄ°üÃûºÍÎ»ÖÃ-->
         <javaModelGenerator targetPackage="com.seu.kse.bean" targetProject="java">
             <property name="enableSubPackages" value="true"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
-        <!-- ç”Ÿæˆæ˜ å°„æ–‡ä»¶çš„åŒ…åå’Œä½ç½®-->
+        <!-- Éú³ÉÓ³ÉäÎÄ¼þµÄ°üÃûºÍÎ»ÖÃ-->
         <sqlMapGenerator targetPackage="com.seu.kse.mapping" targetProject="java">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
-        <!-- ç”ŸæˆDAOçš„åŒ…åå’Œä½ç½®-->
+        <!-- Éú³ÉDAOµÄ°üÃûºÍÎ»ÖÃ-->
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.seu.kse.dao" targetProject="java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
-        <!-- è¦ç”Ÿæˆçš„è¡¨ tableNameæ˜¯æ•°æ®åº“ä¸­çš„è¡¨åæˆ–è§†å›¾å domainObjectNameæ˜¯å®žä½“ç±»å-->
+        <!-- ÒªÉú³ÉµÄ±í tableNameÊÇÊý¾Ý¿âÖÐµÄ±íÃû»òÊÓÍ¼Ãû domainObjectNameÊÇÊµÌåÀàÃû-->
         <table tableName="tag" domainObjectName="Tag" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="paper_tag" domainObjectName="PaperTag" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         
