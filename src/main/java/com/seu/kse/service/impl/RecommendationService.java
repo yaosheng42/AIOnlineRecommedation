@@ -62,13 +62,16 @@ public class RecommendationService {
 
     public void init(){
         try {
-            paperDocument = new PaperDocument();
-            paperDocument.ToDocument(Configuration.sentencesFile);
+            //paperDocument = new PaperDocument();
+            //ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+            //String filepath = classloader.getResource(Configuration.sentencesFile).getPath();
+
+            //paperDocument.ToDocument(filepath);
             paper2Vec = new Paper2Vec();
             //训练模型
-            paper2Vec.modelByWord2vce();
+            //paper2Vec.modelByWord2vce(); //服務器內存溢出，如何解決
             paper2Vec.calPaperVec();
-            cmodel = new CBKNNModel(paper2Vec);
+            cmodel = new CBKNNModel(paper2Vec,false);
 
             emailSender = new EmailSender(Constant.sender,Constant.emailhost);
             emailSender.init();
@@ -86,7 +89,7 @@ public class RecommendationService {
         //生产文件
 
 
-        paperDocument.ToDocument(Configuration.sentencesFile);
+        paperDocument.ToDocument(RecommendationService.class.getClassLoader().getResource(Configuration.sentencesFile).getPath());
         //1 . 重新训练词向量
 
         paper2Vec.modelByWord2vce();

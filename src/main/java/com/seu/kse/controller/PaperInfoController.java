@@ -94,7 +94,7 @@ public class PaperInfoController {
         User login_user = Utils.testLogin(session,model);
         String id = request.getParameter("id");
         Paper paper = paperService.searchPaper(id);
-        System.out.println(paper.getPaperAbstract());
+
         paper.setId(id);
         model.addAttribute("paper",paper);
         List<Author> authorsOfpaper = authorService.getAuthorsByPaper(id);

@@ -27,17 +27,18 @@ public class CBKNNModel {
     UserMapper userDao = (UserMapper) ac.getBean("userMapper");
     UserPaperBehaviorMapper user_paper_Dao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
     PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    Map<String ,List<PaperSim>> paperSims ;
+    static Map<String ,List<PaperSim>> paperSims ;
     static Paper2Vec paper2Vec ;
     public CBKNNModel(){
         paperSims = new HashMap<String, List<PaperSim>>();
         paper2Vec= RecommendationService.getPaper2Vec();
     }
 
-    public CBKNNModel(Paper2Vec paper2Vec){
+    public CBKNNModel(Paper2Vec paper2Vec,boolean open){
         paperSims = new HashMap<String, List<PaperSim>>();
         this.paper2Vec= paper2Vec;
-        trainSimPaper();
+        trainSimPaper(open);
+        System.out.println("CBKNNModel 初始化完成");
     }
 
     public List<PaperSim> userColdStart(){
@@ -68,13 +69,13 @@ public class CBKNNModel {
         List<PaperSim> sims = new ArrayList<PaperSim>();
         File file =null;
 
-        file = new File(Configuration.Paper_Model_Path);
+        file = new File(CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path).getPath());
 
         if(paperSims != null && paperSims.size()!=0){
             sims = paperSims.get(pid);
         }else if(file.exists()) {
             try {
-                FileInputStream fin = new FileInputStream(Configuration.Paper_Model_Path);
+                FileInputStream fin = new FileInputStream(CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path).getPath());
                 ObjectInputStream oin = new ObjectInputStream(fin);
                 paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
                 sims = paperSims.get(pid);
@@ -107,7 +108,7 @@ public class CBKNNModel {
             Collections.sort(sims);
         }
         for(int i=0 ;i<k;i++){
-            res.add(paperDao.selectByPrimaryKey(sims.get(i).getPid()));
+            if(sims!=null) res.add(paperDao.selectByPrimaryKey(sims.get(i).getPid()));
         }
         return  res;
     }
@@ -115,14 +116,14 @@ public class CBKNNModel {
     /**
      * 训练获得所有论文的相似论文，并持久化
      */
-    public void trainSimPaper()  {
+    public void trainSimPaper(boolean open)  {
         Map<String,double[]> papers = null;
         if(paper2Vec.paperVecs!=null && paper2Vec.paperVecs.size() != 0){
             papers = paper2Vec.paperVecs;
         }else{
             papers = paper2Vec.calPaperVec();
         }
-
+        System.out.println("开始计算 paper sims ");
         for(Map.Entry<String, double[]> e1 : papers.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
             String pid1 = e1.getKey();
@@ -137,17 +138,21 @@ public class CBKNNModel {
             Collections.sort(sims);
             paperSims.put(pid1,sims);
         }
-
-        //持久化paperSim
-        try {
-            FileOutputStream fos = new FileOutputStream(Configuration.Paper_Model_Path);
-            ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(paperSims);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println("paper sims 计算完成");
+        if(open){
+            //持久化paperSim
+            try {
+                String root_path = CBKNNModel.class.getClassLoader().getResource("/").getPath();
+                FileOutputStream fos = new FileOutputStream(root_path+"/"+Configuration.Paper_Model_Path);
+                ObjectOutputStream os = new ObjectOutputStream(fos);
+                os.writeObject(paperSims);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
 
     }
 

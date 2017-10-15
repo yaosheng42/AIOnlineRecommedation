@@ -38,12 +38,7 @@
           <warName>${project.artifactId}</warName>
           <webResources>
             <resource>
-              <directory>src/main/webapp</directory>
-              <includes>
-                <include>*.xml</include>
-                <include>**/*.xml</include>
-              </includes>
-              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
             </resource>
           </webResources>
         </configuration>
@@ -75,15 +70,7 @@
           <include>**/*.xml</include>
         </includes>
       </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>*.xml</include>
-          <include>*.properties</include>
-          <include>**/*.xml</include>
-        </includes>
-        <filtering>true</filtering>
-      </resource>
+
       <resource>
         <directory>src/main/java</directory>
         <includes>
@@ -91,6 +78,13 @@
           <include>**/*.xml</include>
         </includes>
         <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*</include>
+        </includes>
+
       </resource>
 
     </resources>
@@ -229,7 +223,7 @@
     <!-- https://mvnrepository.com/artifact/org.nd4j/nd4j-native -->
     <dependency>
       <groupId>org.nd4j</groupId>
-      <artifactId>nd4j-native</artifactId>
+      <artifactId>nd4j-native-platform</artifactId>
       <version>0.8.0</version>
     </dependency>
 

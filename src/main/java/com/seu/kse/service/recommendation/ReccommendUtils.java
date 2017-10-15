@@ -83,7 +83,7 @@ public class ReccommendUtils {
     }
 
     public static List<String> delStopWords(String[] words){
-        if(stopwords == null) loadStopWords(Configuration.stopWords);
+        if(stopwords == null) loadStopWords(ReccommendUtils.class.getClassLoader().getResource(Configuration.stopWords).getPath());
         List<String> delWords = new ArrayList<String>();
         for(String word : words){
             for(String stopword : stopwords){

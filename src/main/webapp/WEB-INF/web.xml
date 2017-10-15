@@ -142,7 +142,10 @@
     - (like integration with proprietary webapps or servlets) you might have
     - to change this parameter.
     -->
-
+  <context-param>
+    <param-name>AI</param-name>
+    <param-value>AI.root</param-value>
+  </context-param>
 
 </web-app>
         

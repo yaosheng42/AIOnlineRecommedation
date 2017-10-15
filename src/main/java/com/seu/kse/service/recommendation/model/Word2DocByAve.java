@@ -14,8 +14,9 @@ public class Word2DocByAve extends Word2Doc{
     static{
         if(paper2Vec == null){
             paper2Vec = new Paper2Vec();
-            vec = paper2Vec.loadWord2VecModelFromText();
+
         }
+        vec = paper2Vec.loadWord2VecModelFromText();
     }
     public double[] calDocVec(String[] words) {
         double[] docVec = new double[Configuration.dimensions];
