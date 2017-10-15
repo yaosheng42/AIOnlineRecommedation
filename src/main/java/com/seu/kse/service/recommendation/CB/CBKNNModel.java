@@ -124,13 +124,13 @@ public class CBKNNModel {
             papers = paper2Vec.calPaperVec();
         }
         System.out.println("开始计算 paper sims ");
+        System.out.println("papers.size : " + papers.size());
         for(Map.Entry<String, double[]> e1 : papers.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
             String pid1 = e1.getKey();
             for(Map.Entry<String, double[]> e2 : papers.entrySet()){
                 if(e1==e2) continue;
                 String pid2 = e2.getKey();
-
                 double sim = ReccommendUtils.cosinSimilarity(e1.getValue(),e2.getValue());
                 PaperSim paperSim = new PaperSim(pid2, sim);
                 sims.add(paperSim);
