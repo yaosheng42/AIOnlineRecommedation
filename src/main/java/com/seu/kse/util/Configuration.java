@@ -1,4 +1,4 @@
-package com.seu.kse.service.recommendation;
+package com.seu.kse.util;
 
 /**
  * Created by yaosheng on 2017/5/26.

@@ -10,7 +10,7 @@ import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.email.EmailSender;
 import com.seu.kse.service.recommendation.CB.CBKNNModel;
 import com.seu.kse.service.recommendation.CB.PaperDocument;
-import com.seu.kse.service.recommendation.Configuration;
+import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommendation.model.Paper2Vec;
 import com.seu.kse.service.recommendation.model.PaperSim;
 import com.seu.kse.util.Constant;

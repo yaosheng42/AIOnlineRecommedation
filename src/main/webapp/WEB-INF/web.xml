@@ -39,7 +39,7 @@
   </listener>
 
   <listener>
-    <listener-class>com.seu.kse.datainjection.MyContextListener</listener-class>
+    <listener-class>com.seu.kse.datainjection.DataInjectContextListener</listener-class>
   </listener>
   <listener>
     <listener-class>com.seu.kse.listener.RecommedationListener</listener-class>
@@ -70,7 +70,7 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
   <welcome-file-list>
-    <welcome-file>/index.jsp</welcome-file>
+    <welcome-file>/search</welcome-file>
   </welcome-file-list>
   <!--
     - Declare Spring context listener which sets up the Spring Application Context

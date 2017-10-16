@@ -91,6 +91,9 @@ public class PaperInfoController {
      */
     @RequestMapping("/paperinfo")
     public String searchPaper(HttpServletRequest request, HttpSession session, Model model){
+        if(!Utils.testConnect()){
+            return "/index";
+        }
         User login_user = Utils.testLogin(session,model);
         String id = request.getParameter("id");
         Paper paper = paperService.searchPaper(id);
@@ -144,6 +147,9 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.GET,value="/searchnotes",produces="text/plain;charset=UTF-8")
     public @ResponseBody String searchNotesForPaper(HttpServletRequest request,HttpSession session, Model model){
+        if(!Utils.testConnect()){
+            return "/index";
+        }
         String id = request.getParameter("pid");
         User login_user = Utils.testLogin(session,model);
         if (id == null || login_user==null) return "error";
@@ -170,6 +176,9 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.POST,value="/takequestions",produces="text/plain;charset=UTF-8")
     public @ResponseBody String takeQuestionsForPaper(HttpServletRequest request,HttpSession session, Model model){
+        if(!Utils.testConnect()){
+            return "/index";
+        }
         String id = request.getParameter("paperid");
         String title = request.getParameter("questiontitle");
         String content = request.getParameter("questioncontent");
@@ -189,6 +198,9 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.GET,value="/supportpaper",produces="text/plain;charset=UTF-8")
     public @ResponseBody String supportForOnePaper(HttpServletRequest request,HttpSession session, Model model){
+        if(!Utils.testConnect()){
+            return "/index";
+        }
         User login_user = Utils.testLogin(session,model);
         if(login_user == null) return "error";
         String id = request.getParameter("pid");

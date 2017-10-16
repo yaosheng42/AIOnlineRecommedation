@@ -3,9 +3,8 @@ package com.seu.kse.service.recommendation.model;
 import com.seu.kse.bean.Paper;
 import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.service.recommendation.CB.CBKNNModel;
-import com.seu.kse.service.recommendation.Configuration;
+import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommendation.ReccommendUtils;
-import com.seu.kse.service.impl.PaperService;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
@@ -15,9 +14,7 @@ import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFac
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.*;
 import java.net.URL;
 import java.util.HashMap;

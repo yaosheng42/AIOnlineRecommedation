@@ -50,7 +50,7 @@ public class RecommedationListener implements ServletContextListener {
         // unit - initialDelay 和 period 参数的时间单位
         System.out.println("任务启动………………………………");
 
-        taskHandle = scheduler.scheduleAtFixedRate(task, 9*60*60, 24*60*60, TimeUnit.SECONDS);
+        taskHandle = scheduler.scheduleAtFixedRate(task, 22*60*60, 24*60*60, TimeUnit.SECONDS);
     }
     public void taskEnd(){
         scheduler.shutdown();

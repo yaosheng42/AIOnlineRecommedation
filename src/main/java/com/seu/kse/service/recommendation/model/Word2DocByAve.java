@@ -1,7 +1,7 @@
 package com.seu.kse.service.recommendation.model;
 
 
-import com.seu.kse.service.recommendation.Configuration;
+import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommendation.ReccommendUtils;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 

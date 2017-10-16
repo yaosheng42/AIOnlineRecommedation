@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * API中描述：ServletContextListener继承于EventListener，其实现者会在web应用的servlet context改变的时候收到事件通知，
  * 但是还必须要配置到web应用的部署文件中（web.xml）
  */
-public class MyContextListener implements ServletContextListener {
+public class DataInjectContextListener implements ServletContextListener {
 
     DataInjectService dj ;
 
@@ -51,7 +51,7 @@ public class MyContextListener implements ServletContextListener {
         // unit - initialDelay 和 period 参数的时间单位
         System.out.println("数据注入………………………………");
 
-        taskHandle = scheduler.scheduleAtFixedRate(task, 3*1000*60*60, 24*1000*60*60, TimeUnit.MILLISECONDS);
+        taskHandle = scheduler.scheduleAtFixedRate(task, 11*1000*60*60, 24*1000*60*60, TimeUnit.MILLISECONDS);
     }
     public void taskEnd(){
         scheduler.shutdown();

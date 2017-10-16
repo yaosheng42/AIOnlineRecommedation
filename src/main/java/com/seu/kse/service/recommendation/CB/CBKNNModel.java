@@ -7,7 +7,7 @@ import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.dao.UserMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.service.impl.RecommendationService;
-import com.seu.kse.service.recommendation.Configuration;
+import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommendation.ReccommendUtils;
 import com.seu.kse.service.recommendation.model.Paper2Vec;
 import com.seu.kse.service.recommendation.model.PaperSim;
@@ -16,6 +16,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -27,8 +28,8 @@ public class CBKNNModel {
     UserMapper userDao = (UserMapper) ac.getBean("userMapper");
     UserPaperBehaviorMapper user_paper_Dao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
     PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    static Map<String ,List<PaperSim>> paperSims ;
-    static Paper2Vec paper2Vec ;
+    public static Map<String ,List<PaperSim>> paperSims ;
+    public static Paper2Vec paper2Vec ;
     public CBKNNModel(){
         paperSims = new HashMap<String, List<PaperSim>>();
         paper2Vec= RecommendationService.getPaper2Vec();
@@ -125,6 +126,23 @@ public class CBKNNModel {
         }
         System.out.println("开始计算 paper sims ");
         System.out.println("papers.size : " + papers.size());
+
+        URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
+        if (!open){
+            FileInputStream fin = null;
+            try {
+
+                fin = new FileInputStream(url.getPath());
+                ObjectInputStream oin = new ObjectInputStream(fin);
+                System.out.println("读取 paper sims ");
+                paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
+                System.out.println("paper sims 计算完成");
+                return;
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
         for(Map.Entry<String, double[]> e1 : papers.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
             String pid1 = e1.getKey();
@@ -136,9 +154,10 @@ public class CBKNNModel {
                 sims.add(paperSim);
             }
             Collections.sort(sims);
-            paperSims.put(pid1,sims);
+            List<PaperSim> subSims =  new ArrayList<PaperSim>(sims.subList(0,10));
+            paperSims.put(pid1,subSims);
         }
-        System.out.println("paper sims 计算完成");
+
         if(open){
             //持久化paperSim
             try {
