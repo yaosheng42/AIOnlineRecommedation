@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,16 +63,11 @@ public class RecommendationService {
 
     public void init(){
         try {
-            //paperDocument = new PaperDocument();
-            //ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-            //String filepath = classloader.getResource(Configuration.sentencesFile).getPath();
+            //updateModel();
 
-            //paperDocument.ToDocument(filepath);
             paper2Vec = new Paper2Vec();
-            //训练模型
-            //paper2Vec.modelByWord2vce(); //服務器內存溢出，如何解決
-            paper2Vec.calPaperVec();
-            cmodel = new CBKNNModel(paper2Vec,false);
+            paper2Vec.loadPaperVec();
+            cmodel = new CBKNNModel(paper2Vec,true);
 
             emailSender = new EmailSender(Constant.sender,Constant.emailhost);
             emailSender.init();
@@ -89,13 +85,18 @@ public class RecommendationService {
         //生产文件
 
 
-        paperDocument.ToDocument(RecommendationService.class.getClassLoader().getResource(Configuration.sentencesFile).getPath());
-        //1 . 重新训练词向量
+        paperDocument = new PaperDocument();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        URL url_root = classloader.getResource("/");
+        String filepath = url_root.getPath();
 
-        paper2Vec.modelByWord2vce();
-        //2 . 计算paper向量
+        paperDocument.ToDocument(filepath+"/"+Configuration.sentencesFile);
+        paper2Vec = new Paper2Vec();
+        //训练模型
+        paper2Vec.modelByWord2vce(); //服務器內存溢出，如何解決
         paper2Vec.calPaperVec();
-        //3. 计算用户近似的向量
+        cmodel = new CBKNNModel(paper2Vec,true);
+
 
         res = cmodel.model();
     }

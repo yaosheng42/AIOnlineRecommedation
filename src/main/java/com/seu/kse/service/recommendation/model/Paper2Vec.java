@@ -30,7 +30,7 @@ public class Paper2Vec {
 
     ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
     private PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    public Map<String, double[]> paperVecs = new HashMap<String, double[]>();
+    public static Map<String, double[]> paperVecs = new HashMap<String, double[]>();
     private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
     private String filepath = classloader.getResource(Configuration.sentencesFile).getPath();
     //private static Logger log = LoggerFactory.getLogger(Paper2Vec.class);
@@ -66,13 +66,13 @@ public class Paper2Vec {
             //log.info("Writing word vectors to text file....");
             System.out.println("Writing word vectors to text file....");
             // Write word vectors to file
-            URL url = Paper2Vec.class.getClassLoader().getResource(Configuration.modelFile);
+            URL url = Thread.currentThread().getContextClassLoader().getResource(Configuration.modelFile);
             if(url==null){
-                String root_path =  Paper2Vec.class.getClassLoader().getResource("/").getPath();
+                String root_path =  Thread.currentThread().getContextClassLoader().getResource("/").getPath();
                 File file = new File(root_path+"/"+Configuration.modelFile);
                 file.createNewFile();
             }
-            WordVectorSerializer.writeWord2VecModel(vec, Paper2Vec.class.getClassLoader().getResource(Configuration.modelFile).getPath());
+            WordVectorSerializer.writeWord2VecModel(vec, Thread.currentThread().getContextClassLoader().getResource(Configuration.modelFile).getPath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -89,38 +89,27 @@ public class Paper2Vec {
         return vec;
     }
 
-    public Map<String, double[]> calPaperVec(){
-        URL url =CBKNNModel.class.getClassLoader().getResource(Configuration.paper_vec);
+    public void loadPaperVec(){
+        try {
+            FileInputStream fin = new FileInputStream(CBKNNModel.class.getClassLoader().getResource(Configuration.paper_vec).getPath());
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            System.out.println("载入paper向量");
+            paperVecs=(Map<String, double[]>) oin.readObject();
+            System.out.println("加载完成paper向量");
 
-        File paper2vec_file = null ;
-        if (url!=null){
-            String path = url.getPath();
-            paper2vec_file = new File(path);
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+
+            e.printStackTrace();
         }
+    }
 
-
-        boolean flag = false;
-        if(paper2vec_file!=null&&paper2vec_file.exists()) {
-            try {
-                FileInputStream fin = new FileInputStream(CBKNNModel.class.getClassLoader().getResource(Configuration.paper_vec).getPath());
-                ObjectInputStream oin = new ObjectInputStream(fin);
-                System.out.println("载入paper向量");
-                paperVecs=(Map<String, double[]>) oin.readObject();
-                System.out.println("加载完成paper向量");
-
-            } catch (FileNotFoundException e) {
-                flag = true;
-                e.printStackTrace();
-            } catch (IOException e) {
-                flag = true;
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                flag = true;
-                e.printStackTrace();
-            }
-
-        }
-        if(flag||paper2vec_file==null){
+    public void calPaperVec(){
 
             List<Paper> papers = paperDao.selectAllPaper();
             //获得每一篇论文的词表,按空格分词
@@ -152,10 +141,8 @@ public class Paper2Vec {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-        }
         System.out.println("paper2vec load 完成");
-        return paperVecs;
+
     }
 
 }

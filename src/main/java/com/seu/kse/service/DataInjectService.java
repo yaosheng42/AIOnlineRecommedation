@@ -8,6 +8,7 @@ import com.seu.kse.dao.AuthorPaperMapper;
 import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.service.impl.PaperService;
 import com.seu.kse.util.CommonFileUtil;
+import com.seu.kse.util.Configuration;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -40,19 +41,19 @@ public class DataInjectService {
     PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
 
     private static Logger logger= Logger.getLogger(DataInjectService.class);
-    private static String path="F:data\\arxiv\\paperPro";
+    private static String path= Configuration.arxiv_path;
     private static String author_add="https://arxiv.org";
     public  void dataInject(){
         try{
             Date now = new Date();
             SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd");
             String date = sf.format(now);
-            Calendar calendar = new GregorianCalendar();
 
-            //date = "2017_07_03";
+
+            date = "2017_10_16";
             System.out.println(date);
             File file=new File(path+"/"+date);
-            int count=1;
+
             while(!file.exists()) {
                 return;
             }

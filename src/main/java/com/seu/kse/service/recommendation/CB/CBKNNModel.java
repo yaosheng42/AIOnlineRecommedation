@@ -38,9 +38,29 @@ public class CBKNNModel {
     public CBKNNModel(Paper2Vec paper2Vec,boolean open){
         paperSims = new HashMap<String, List<PaperSim>>();
         this.paper2Vec= paper2Vec;
-        trainSimPaper(open);
+        if(open){
+            trainSimPaper();
+        }else{
+            loadPaperSimModel();
+        }
         System.out.println("CBKNNModel 初始化完成");
     }
+
+    public void loadPaperSimModel(){
+        FileInputStream fin ;
+        URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
+        try {
+            fin = new FileInputStream(url.getPath());
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            System.out.println("读取 paper sims ");
+            paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
+            System.out.println("paper sims 计算完成");
+            fin.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
     public List<PaperSim> userColdStart(){
         //针对冷启动用户
@@ -68,45 +88,8 @@ public class CBKNNModel {
     public List<Paper> getSimPaper(String pid, int k){
         List<Paper> res = new ArrayList<Paper>();
         List<PaperSim> sims = new ArrayList<PaperSim>();
-        File file =null;
-
-        file = new File(CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path).getPath());
-
         if(paperSims != null && paperSims.size()!=0){
             sims = paperSims.get(pid);
-        }else if(file.exists()) {
-            try {
-                FileInputStream fin = new FileInputStream(CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path).getPath());
-                ObjectInputStream oin = new ObjectInputStream(fin);
-                paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
-                sims = paperSims.get(pid);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-        }else{
-            //1. 加载 word2vec模型
-            Map<String,double[]> papers = null;
-            if(paper2Vec.paperVecs!=null && paper2Vec.paperVecs.size() != 0){
-                papers = paper2Vec.paperVecs;
-            }else{
-                papers = paper2Vec.calPaperVec();
-            }
-            double[] paper = papers.get(pid);
-
-            for(Map.Entry<String, double[]> e : papers.entrySet()){
-                String id = e.getKey();
-                if( pid == id ) continue;
-                double[] vec = e.getValue();
-                double similarity = ReccommendUtils.cosinSimilarity(paper, vec);
-                PaperSim sim = new PaperSim(id,similarity);
-                sims.add(sim);
-            }
-            Collections.sort(sims);
         }
         for(int i=0 ;i<k;i++){
             if(sims!=null) res.add(paperDao.selectByPrimaryKey(sims.get(i).getPid()));
@@ -117,36 +100,21 @@ public class CBKNNModel {
     /**
      * 训练获得所有论文的相似论文，并持久化
      */
-    public void trainSimPaper(boolean open)  {
-        Map<String,double[]> papers = null;
-        if(paper2Vec.paperVecs!=null && paper2Vec.paperVecs.size() != 0){
-            papers = paper2Vec.paperVecs;
-        }else{
-            papers = paper2Vec.calPaperVec();
+    public void trainSimPaper()  {
+        //计算相似论文
+
+        if(paper2Vec.paperVecs==null || paper2Vec.paperVecs.size() == 0){
+            paper2Vec.calPaperVec();
         }
         System.out.println("开始计算 paper sims ");
-        System.out.println("papers.size : " + papers.size());
+        System.out.println("papers.size : " + paper2Vec.paperVecs.size());
 
         URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
-        if (!open){
-            FileInputStream fin = null;
-            try {
 
-                fin = new FileInputStream(url.getPath());
-                ObjectInputStream oin = new ObjectInputStream(fin);
-                System.out.println("读取 paper sims ");
-                paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
-                System.out.println("paper sims 计算完成");
-                return;
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        for(Map.Entry<String, double[]> e1 : papers.entrySet()){
+        for(Map.Entry<String, double[]> e1 : paper2Vec.paperVecs.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
             String pid1 = e1.getKey();
-            for(Map.Entry<String, double[]> e2 : papers.entrySet()){
+            for(Map.Entry<String, double[]> e2 : paper2Vec.paperVecs.entrySet()){
                 if(e1==e2) continue;
                 String pid2 = e2.getKey();
                 double sim = ReccommendUtils.cosinSimilarity(e1.getValue(),e2.getValue());
@@ -158,19 +126,18 @@ public class CBKNNModel {
             paperSims.put(pid1,subSims);
         }
 
-        if(open){
-            //持久化paperSim
-            try {
-                String root_path = CBKNNModel.class.getClassLoader().getResource("/").getPath();
-                FileOutputStream fos = new FileOutputStream(root_path+"/"+Configuration.Paper_Model_Path);
-                ObjectOutputStream os = new ObjectOutputStream(fos);
-                os.writeObject(paperSims);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        try {
+            String root_path = CBKNNModel.class.getClassLoader().getResource("/").getPath();
+            FileOutputStream fos = new FileOutputStream(root_path+"/"+Configuration.Paper_Model_Path);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(paperSims);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
 
 
     }
@@ -182,11 +149,10 @@ public class CBKNNModel {
         //3. get the paper vec
         //4. cal knn paper for user
         List<User> users = userDao.getAllUser();
-        Map<String,double[]> doc2vecs = null;
-        if(paper2Vec.paperVecs!=null && paper2Vec.paperVecs.size() != 0){
-            doc2vecs = paper2Vec.paperVecs;
-        }else{
-            doc2vecs = paper2Vec.calPaperVec();
+
+        if(paper2Vec.paperVecs==null || paper2Vec.paperVecs.size() == 0){
+
+             paper2Vec.calPaperVec();
         }
         Map<String, List<PaperSim>> users_papers = new HashMap<String, List<PaperSim>>();
         for(User user : users){
@@ -201,12 +167,12 @@ public class CBKNNModel {
                 for(UserPaperBehavior up : user_paper_behaves){
                     int score = up.getInterest();
                     String pid = up.getPid();
-                    double[] vec = doc2vecs.get(pid);
+                    double[] vec = paper2Vec.paperVecs.get(pid);
                     history.put(pid, vec);
                     weight.put(pid, score);
                 }
                 //计算其他论文和history论文中的相似度
-                Iterator iter = doc2vecs.entrySet().iterator();
+                Iterator iter = paper2Vec.paperVecs.entrySet().iterator();
                 while(iter.hasNext()){
                     Map.Entry<String, double[]> entry = (Map.Entry<String, double[]>) iter.next();
                     String pid = entry.getKey();
