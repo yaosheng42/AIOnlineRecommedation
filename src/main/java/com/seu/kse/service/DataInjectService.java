@@ -13,6 +13,7 @@ import com.seu.kse.util.LogUtils;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -24,7 +25,7 @@ import java.util.*;
  * add by Yaosheng on 2017/12/4
  */
 
-
+@Service
 public class DataInjectService {
 
     private ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");

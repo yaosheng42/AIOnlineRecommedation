@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 /**
  * Created by yaosheng on 2017/5/23.
  */
-@Service("UserFieldService")
+@Service
 public class UserFieldService {
     @Resource
     private userFieldsMapper userFieldDao;
