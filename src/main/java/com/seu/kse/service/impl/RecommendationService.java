@@ -17,8 +17,10 @@ import com.seu.kse.util.Constant;
 import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -31,7 +33,7 @@ import java.util.Map;
  * Created by yaosheng on 2017/5/31.
  */
 
-
+@Service
 public class RecommendationService {
     private ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
     private PaperDocument paperDocument;
@@ -41,11 +43,17 @@ public class RecommendationService {
     private
 
     Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
+    private final PaperMapper paperDao;
+    private final UserMapper userDao;
 
-    PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    UserMapper userDao = (UserMapper) ac.getBean("userMapper");
-    UserPaperBehaviorMapper userPaperBehaviorDao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
+    private UserPaperBehaviorMapper userPaperBehaviorDao;
 
+    @Autowired
+    public RecommendationService(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao) {
+        this.paperDao = paperDao;
+        this.userDao = userDao;
+        this.userPaperBehaviorDao = userPaperBehaviorDao;
+    }
 
 
     public static CBKNNModel getCBKKModel(){
@@ -166,10 +174,10 @@ public class RecommendationService {
         emailSender.send(email,content);
     }
 
-    @Test
-    public void run(){
-        RecommendationService rs =new RecommendationService();
-        rs.updateModel();
-        rs.recommend(5);
-    }
+//    @Test
+//    public void run(){
+//        RecommendationService rs =new RecommendationService();
+//        rs.updateModel();
+//        rs.recommend(5);
+//    }
 }
