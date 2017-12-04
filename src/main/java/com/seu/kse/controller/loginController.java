@@ -44,7 +44,7 @@ public class loginController {
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpServletRequest request,HttpSession session, Model model){
+    public String logout(HttpSession session){
         session.removeAttribute(Constant.CURRENT_USER);
         return "redirect:/login/login.jsp";
     }
@@ -85,12 +85,11 @@ public class loginController {
 
     /**
      * 记录用户的相关领域
-     * @param request
-     * @param model
-     * @return
+     * @param request 请求
+     * @return 地址
      */
     @RequestMapping("/insertUserField")
-    public String insertUserField(HttpServletRequest request, Model model){
+    public String insertUserField(HttpServletRequest request){
         Map<String, String[]> tags = request.getParameterMap();
         String[] tagList=tags.get("tags");
         String uid=request.getParameter("uid");

@@ -6,74 +6,118 @@ import com.seu.kse.bean.Paper;
 import com.seu.kse.dao.AuthorMapper;
 import com.seu.kse.dao.AuthorPaperMapper;
 import com.seu.kse.dao.PaperMapper;
-import com.seu.kse.service.impl.PaperService;
+
 import com.seu.kse.util.CommonFileUtil;
 import com.seu.kse.util.Configuration;
-import org.apache.log4j.Logger;
+import com.seu.kse.util.LogUtils;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by Zcpwillam on 2017/5/24.
+ * add by Yaosheng on 2017/12/4
  */
 
 
 public class DataInjectService {
 
-    ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
+    private ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
 
-    AuthorMapper authorDao= (AuthorMapper) ac.getBean("authorMapper");
-
-
-    AuthorPaperMapper authorPaperDao = (AuthorPaperMapper) ac.getBean("authorPaperMapper");
+    private AuthorMapper authorDao= (AuthorMapper) ac.getBean("authorMapper");
 
 
-    PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
+    private AuthorPaperMapper authorPaperDao = (AuthorPaperMapper) ac.getBean("authorPaperMapper");
 
-    private static Logger logger= Logger.getLogger(DataInjectService.class);
+
+    private PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
+
+
     private static String path= Configuration.arxiv_path;
-    private static String author_add="https://arxiv.org";
+
     public  void dataInject(){
         try{
+            //dataInject_init();
             Date now = new Date();
             SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd");
             String date = sf.format(now);
 
 
-            date = "2017_10_16";
+            //date = "2017_10_16";
             System.out.println(date);
             File file=new File(path+"/"+date);
 
-            while(!file.exists()) {
+            if(!file.exists()) {
                 return;
             }
             File[] list=file.listFiles();
+            if(list==null) {
+                LogUtils.info("无数据",DataInjectService.class);
+                return;
+            }
             for(File f:list)
                 DataInjectByFile(f);
             System.out.println("开始导入数据！");
-
+            LogUtils.info("开始导入数据！",DataInjectService.class);
 
 
         }catch (Exception e){
             e.printStackTrace();
+            LogUtils.error(e.getMessage(),DataInjectService.class);
         }
 
     }
-    public  void DataInjectByFile(File file){
+    public void dataInject_init(){
+
+        Calendar c = Calendar.getInstance();
+        Date now = c.getTime();
+        c.set(2017,Calendar.NOVEMBER,14);
+        System.out.println("now :"+now);
+        Date cur =  c.getTime();
+        System.out.println("cur :"+cur);
+        while(cur.before(now)){
+            try{
+                System.out.print("cur : "+cur);
+                SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd");
+                String date = sf.format(cur);
+                System.out.println(date);
+                File file=new File(path+"/"+date);
+                if(!file.exists()) {
+                    System.out.println(date+"无数据");
+                    LogUtils.info(date+"无数据",DataInjectService.class);
+                    break;
+                }
+                File[] list=file.listFiles();
+                if(list==null){
+                    LogUtils.info("无数据",DataInjectService.class);
+                    return;
+                }
+                for(File f:list)
+                    DataInjectByFile(f);
+                System.out.println("导入 "+date+" 数据");
+                LogUtils.info("导入 "+date+" 数据",DataInjectService.class);
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            c.add(Calendar.DATE,1);
+            cur =  c.getTime();
+
+        }
+
+    }
+    private void DataInjectByFile(File file){
         try{
             ArrayList<String> inputList= CommonFileUtil.read(file);
             if(inputList==null||inputList.isEmpty()){
-                logger.error("Empty File:"+file.getName());
+                LogUtils.error("Empty File:"+file.getName(),DataInjectService.class);
+
             }else{
                 GenerateDataRecord(inputList);
             }
@@ -82,14 +126,14 @@ public class DataInjectService {
             e.printStackTrace();
             ArrayList<String> inputList= CommonFileUtil.read(file);
             if(inputList==null||inputList.isEmpty()){
-                logger.error("Empty File:"+file.getName());
+                LogUtils.error("Empty File:"+file.getName(),DataInjectService.class);
             }else{
                 GenerateDataRecord(inputList);
             }
         }
 
     }
-    public  void GenerateDataRecord(ArrayList<String> recordList){
+    private  void GenerateDataRecord(ArrayList<String> recordList){
         ArrayList<String> authorList=new ArrayList<String>();
         HashMap<String,String> paperInfo=new HashMap<String,String>();
         String paperName=recordList.get(0).split("\t")[0];
@@ -137,8 +181,9 @@ public class DataInjectService {
         return paper;
     }
     private static List<Author> generateAuthorList(ArrayList<String> authorList){
+        String author_add="https://arxiv.org";
         List<Author> authors=new ArrayList<Author>();
-        Author author=null;
+        Author author;
         for(String a:authorList){
             String[] sp = a.split(",");
             String aname = sp[0];
@@ -153,7 +198,7 @@ public class DataInjectService {
 
     /**
      * 插入论文
-     * @param p
+     * @param p 论文p
      */
     private  int  insertPaperRecord(Paper p){
         //生成关键字

@@ -8,12 +8,14 @@ import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.dao.UserMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.email.EmailSender;
-import com.seu.kse.service.recommendation.CB.CBKNNModel;
-import com.seu.kse.service.recommendation.CB.PaperDocument;
+import com.seu.kse.service.recommender.CB.CBKNNModel;
+import com.seu.kse.service.recommender.CB.PaperDocument;
 import com.seu.kse.util.Configuration;
-import com.seu.kse.service.recommendation.model.Paper2Vec;
-import com.seu.kse.service.recommendation.model.PaperSim;
+import com.seu.kse.service.recommender.model.Paper2Vec;
+import com.seu.kse.service.recommender.model.PaperSim;
 import com.seu.kse.util.Constant;
+import com.seu.kse.util.LogUtils;
+import com.seu.kse.util.Utils;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -36,11 +38,15 @@ public class RecommendationService {
     private static CBKNNModel cmodel;
     private static Paper2Vec paper2Vec;
     private EmailSender emailSender;
+    private
+
     Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
 
     PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
     UserMapper userDao = (UserMapper) ac.getBean("userMapper");
     UserPaperBehaviorMapper userPaperBehaviorDao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
+
+
 
     public static CBKNNModel getCBKKModel(){
         if(cmodel != null) return cmodel;
@@ -63,8 +69,7 @@ public class RecommendationService {
 
     public void init(){
         try {
-            //updateModel();
-
+            LogUtils.info("init start",RecommendationService.class);
             paper2Vec = new Paper2Vec();
             paper2Vec.loadPaperVec();
             cmodel = new CBKNNModel(paper2Vec,true);
@@ -72,8 +77,10 @@ public class RecommendationService {
             emailSender = new EmailSender(Constant.sender,Constant.emailhost);
             emailSender.init();
             System.out.println("init complete!");
+            LogUtils.info("init complete",RecommendationService.class);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
+            LogUtils.error(e.getMessage(),RecommendationService.class);
         }
     }
 
@@ -83,8 +90,7 @@ public class RecommendationService {
         //判断什么时候需要更新模型
         //若需要更新模型，重新计算论文向量
         //生产文件
-
-
+        LogUtils.info("model update init!",RecommendationService.class);
         paperDocument = new PaperDocument();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         URL url_root = classloader.getResource("/");
@@ -99,9 +105,14 @@ public class RecommendationService {
 
 
         res = cmodel.model();
+        LogUtils.info("model update complete !",RecommendationService.class);
     }
 
     public void recommend(int k){
+        LogUtils.info("recommend start !",RecommendationService.class);
+        if(!Utils.testConnect()){
+            return;
+        }
         res = cmodel.model();
         Byte yes =1;
         Byte no = 0;
@@ -129,6 +140,7 @@ public class RecommendationService {
             }
             recommendByEmail(email, paperURLs,paperTitls);
         }
+        LogUtils.info("recommend end !",RecommendationService.class);
     }
 
     /**

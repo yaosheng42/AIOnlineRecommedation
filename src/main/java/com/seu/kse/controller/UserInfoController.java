@@ -28,22 +28,22 @@ import java.util.Map;
 public class UserInfoController {
 
     @Resource
-    PaperService paperService;
+    private PaperService paperService;
 
     @Resource
-    UserPaperService userPaperService;
+    private UserPaperService userPaperService;
 
     @Resource
-    UserTagService userTagService;
+    private UserTagService userTagService;
 
     @Resource
-    AuthorService authorService;
+    private AuthorService authorService;
     @Resource
-    UserServiceImpl userService;
+    private UserServiceImpl userService;
 
 
     @RequestMapping(method= RequestMethod.POST,value="/submitwriterPaper",produces="text/plain;charset=UTF-8")
-    public @ResponseBody String submitwriterPaper(HttpServletRequest  request, Model model){
+    public @ResponseBody String submitwriterPaper(HttpServletRequest  request){
         String uid = request.getParameter("uid");
 
         String paperTitle = request.getParameter("paper_title").trim();
@@ -87,7 +87,7 @@ public class UserInfoController {
         return "success";
     }
     @RequestMapping(method= RequestMethod.POST,value="/addTag",produces="text/plain;charset=UTF-8")
-    public @ResponseBody String addTag(HttpServletRequest  request, Model model){
+    public @ResponseBody String addTag(HttpServletRequest  request){
         String uid = request.getParameter("uid");
         String[] tagNameList = request.getParameter("tags").split(",");
         int line = 0;
@@ -99,7 +99,7 @@ public class UserInfoController {
         return "success";
     }
     @RequestMapping("/userinfo")
-    public  String searchHisPaper(HttpServletRequest  request, HttpSession session, Model model){
+    public  String searchHisPaper( HttpSession session, Model model){
         //传递论文
         User login_user = Utils.testLogin(session,model);
         if(login_user == null) return "/login/login";
@@ -127,7 +127,7 @@ public class UserInfoController {
     }
 
     @RequestMapping("/updateUser")
-    public String updateUser(HttpServletRequest  request,  HttpSession session,Model model){
+    public String updateUser(HttpServletRequest  request,  HttpSession session){
         User user = new User();
         String uid =request.getParameter("uid");
         String uname = request.getParameter("username");

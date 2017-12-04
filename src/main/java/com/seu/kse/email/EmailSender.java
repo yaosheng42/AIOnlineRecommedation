@@ -3,13 +3,12 @@ package com.seu.kse.email;
 import com.seu.kse.util.Constant;
 import com.sun.mail.util.MailSSLSocketFactory;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
+
 import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+
 import java.security.GeneralSecurityException;
 import java.util.Properties;
 
@@ -19,7 +18,7 @@ import java.util.Properties;
 public class EmailSender {
 
     private String userName = Constant.sender;
-    private String psw= "klmvgupzfyolbebb";
+    private String psw= "pwvhmuenfiahbfbc";
     private String host;
     private String from;
     private Properties proes;

@@ -5,10 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.kse.dao.PaperTagMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.dao.UserPaperQuestionMapper;
-import com.seu.kse.listener.RecommedationListener;
 import com.seu.kse.service.impl.RecommendationService;
-import com.seu.kse.service.recommendation.CB.CBKNNModel;
-import com.seu.kse.service.recommendation.model.PaperSim;
+import com.seu.kse.service.recommender.CB.CBKNNModel;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
 import com.seu.kse.dao.UserPaperNoteMapper;
@@ -34,22 +32,22 @@ import java.util.*;
 public class PaperInfoController {
 
     @Resource
-    PaperService paperService;
+    private PaperService paperService;
 
     @Resource
-    AuthorService authorService;
+    private AuthorService authorService;
     @Resource
-    UserPaperNoteMapper userPaperNoteDao;
+    private UserPaperNoteMapper userPaperNoteDao;
     @Resource
-    UserPaperQuestionMapper userPaperQuestionDao;
+    private UserPaperQuestionMapper userPaperQuestionDao;
     @Resource
-    UserPaperBehaviorMapper userPaperBehaviorDao;
+    private UserPaperBehaviorMapper userPaperBehaviorDao;
     @Resource
-    PaperTagMapper paperTagDao;
+    private PaperTagMapper paperTagDao;
     /**
      * 对一篇论文写笔记
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 请求是否完成
      */
     @RequestMapping(method= RequestMethod.POST,value="/takenotes",produces="text/plain;charset=UTF-8")
     public @ResponseBody String takeNotesForPaper(HttpServletRequest request, HttpSession session, Model model){
@@ -84,10 +82,10 @@ public class PaperInfoController {
 
     /**
      * 展示论文
-     * @param request
-     * @param session
-     * @param model
-     * @return
+     * @param request 请求
+     * @param session session
+     * @param model 返回参数
+     * @return 地址
      */
     @RequestMapping("/paperinfo")
     public String searchPaper(HttpServletRequest request, HttpSession session, Model model){
@@ -112,7 +110,7 @@ public class PaperInfoController {
         model.addAttribute("authors",authorsOfpaper);
 
         if(login_user!=null) {
-            UserPaperNoteKey keys = new UserPaperNoteKey(login_user.getId(),paper.getId());
+           //UserPaperNoteKey keys = new UserPaperNoteKey(login_user.getId(),paper.getId());
 
             List<UserPaperNoteWithBLOBs> paperNotes = userPaperNoteDao.selectByPrimaryPaperIDKey(paper.getId());
             System.out.println(paperNotes.size());
@@ -129,7 +127,7 @@ public class PaperInfoController {
         model.addAttribute("tags", tags);
         CBKNNModel cnMolde = RecommendationService.getCBKKModel();
         Map<String, List<Author>> authorMap ;
-        List<Paper> papers= null;
+        List<Paper> papers;
         if (paper.getPublisher().contains("arxiv")){
             papers=cnMolde.getSimPaper(paper.getId(),10);
         }else{
@@ -142,8 +140,8 @@ public class PaperInfoController {
     }
     /**
      * 查询笔记
-     * @param request
-     * @return
+     * @param request 请求
+     * @return json
      */
     @RequestMapping(method= RequestMethod.GET,value="/searchnotes",produces="text/plain;charset=UTF-8")
     public @ResponseBody String searchNotesForPaper(HttpServletRequest request,HttpSession session, Model model){
@@ -171,8 +169,8 @@ public class PaperInfoController {
     }
     /**
      * 对一篇论文进行提问
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 结果
      */
     @RequestMapping(method= RequestMethod.POST,value="/takequestions",produces="text/plain;charset=UTF-8")
     public @ResponseBody String takeQuestionsForPaper(HttpServletRequest request,HttpSession session, Model model){
@@ -193,8 +191,8 @@ public class PaperInfoController {
     }
     /**
      * 点赞一篇论文
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 结果
      */
     @RequestMapping(method= RequestMethod.GET,value="/supportpaper",produces="text/plain;charset=UTF-8")
     public @ResponseBody String supportForOnePaper(HttpServletRequest request,HttpSession session, Model model){

@@ -20,11 +20,11 @@ public class PaperService {
 
     /**
      * 根据时间排序获取limit篇论文
-     * @param limit
+     * @param
      * @return
      */
-    public List<Paper> selectPaperByTime(int page,int limit){
-        List<Paper> papers=paperdao.selectPaperOrderByTime(page,limit);
+    public List<Paper> selectPaperByTime(int start,int end){
+        List<Paper> papers=paperdao.selectPaperOrderByTime(start,end);
         return papers;
     }
     /**

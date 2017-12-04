@@ -42,7 +42,7 @@ charset=UTF-8"
           <span id="msg-notice" style="margin-left:30px;color:red">${result}</span>
       </div>
       <div class="panel-body">
-        <form name="loginform" role="form" action="/login/login" onsubmit="return submitLoginForm(this)" method="post">
+        <form name="loginform" role="form" action="login" onsubmit="return submitLoginForm(this)" method="post">
           <div class="form-group">
             <label>邮箱</label>
             <input id="email" name="email" type="email" placeholder="Enter email" class="form-control">

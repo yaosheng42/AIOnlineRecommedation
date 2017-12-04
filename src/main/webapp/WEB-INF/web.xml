@@ -39,10 +39,13 @@
   </listener>
 
   <listener>
-    <listener-class>com.seu.kse.datainjection.DataInjectContextListener</listener-class>
+    <listener-class>com.seu.kse.listener.DataInjectContextListener</listener-class>
   </listener>
   <listener>
     <listener-class>com.seu.kse.listener.RecommedationListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.seu.kse.listener.OffLineModelListener</listener-class>
   </listener>
 
   <!--

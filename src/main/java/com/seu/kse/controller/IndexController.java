@@ -1,14 +1,11 @@
 package com.seu.kse.controller;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.seu.kse.service.impl.RecommendationService;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
 import com.seu.kse.dao.UserAuthorFocusMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
-import com.seu.kse.dao.UserPaperNoteMapper;
-import com.seu.kse.dao.UserPaperQuestionMapper;
+
+
 import com.seu.kse.service.impl.AuthorService;
 import com.seu.kse.service.impl.PaperService;
 import org.springframework.stereotype.Controller;
@@ -29,45 +26,47 @@ import java.util.*;
 @Controller
 @RequestMapping("/")
 public class IndexController {
-    private int limit = 20;
+
 
     @Resource
-    PaperService paperService;
+    private PaperService paperService;
 
     @Resource
-    AuthorService authorService;
+    private AuthorService authorService;
 
     @Resource
-    UserPaperBehaviorMapper userPaperBehaviorDao;
+    private UserPaperBehaviorMapper userPaperBehaviorDao;
 
     @Resource
-    UserAuthorFocusMapper userAuthorFocusDao;
+    private UserAuthorFocusMapper userAuthorFocusDao;
 
-    @Resource
-    UserPaperNoteMapper userPaperNoteDao;
+//    @Resource
+//    private UserPaperNoteMapper userPaperNoteDao;
+
 
 
     /**
      * 显示最近的论文，根据time字段排序
-     * @param request
-     * @param model
-     * @return
+     * @param request 请求
+     * @param model 返回参数
+     * @return 地址
      */
     @RequestMapping("/search")
     public String toIndex(HttpServletRequest request,HttpSession session, Model model){
+        int limit = 20;
         if(!Utils.testConnect()){
             return "/index";
         }
-        User login_user = Utils.testLogin(session,model);
+        Utils.testLogin(session,model);
         int pageNum=0;
         if(request.getParameter("pageNum")!=null) {
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
         }
-        List<Paper> papers=paperService.selectPaperByTime(pageNum, limit);
+        List<Paper> papers=paperService.selectPaperByTime(pageNum*limit, (pageNum+1)*limit);
         model.addAttribute("papers",papers);
         model.addAttribute("previousPage",pageNum>0?(pageNum-1):pageNum);
         model.addAttribute("nextPage",pageNum+1);
-        //还需要获得作者
+        //获得作者
         Map<String, List<Author>> authorMap = authorService.getAuthorForPapers(papers);
         model.addAttribute("authorMap",authorMap);
 
@@ -76,8 +75,8 @@ public class IndexController {
 
     /**
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 返回布尔值
      */
     @RequestMapping(method= RequestMethod.GET,value="/testinterest",produces="text/plain;charset=UTF-8")
     public @ResponseBody String testInterest(HttpServletRequest request){
@@ -92,8 +91,8 @@ public class IndexController {
     }
     /**
      *
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 返回兴趣
      */
     @RequestMapping(method= RequestMethod.GET,value="/testscoreonpaper",produces="text/plain;charset=UTF-8")
     public @ResponseBody String testScoreOnPaper(HttpServletRequest request){
@@ -113,7 +112,7 @@ public class IndexController {
         if(!Utils.testConnect()){
             return "/index";
         }
-        User login_user = Utils.testLogin(session,model);
+        Utils.testLogin(session,model);
         int aid = Integer.valueOf(request.getParameter("id"));
         Author author = authorService.getAuthorByID(aid);
         model.addAttribute("author",author);
@@ -134,8 +133,8 @@ public class IndexController {
 
     /**
      * 关注某一用户
-     * @param request
-     * @return
+     * @param request 请求
+     * @return 返回布尔值
      */
     @RequestMapping(method= RequestMethod.GET,value="/fouseonauthor",produces="text/plain;charset=UTF-8")
     public @ResponseBody String fouseOnAuthor(HttpServletRequest request,HttpSession session, Model model){
