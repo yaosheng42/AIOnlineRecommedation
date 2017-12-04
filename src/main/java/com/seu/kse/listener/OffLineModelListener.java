@@ -51,7 +51,6 @@ public class OffLineModelListener implements ServletContextListener {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     ScheduledFuture<?> taskHandle;
     public void contextInitialized(ServletContextEvent arg0) {
-        rsService = new RecommendationService();
         System.out.println("contextInitialized……");
         LogUtils.info("contextInitialized……",OffLineModelListener.class);
         taskBegin();

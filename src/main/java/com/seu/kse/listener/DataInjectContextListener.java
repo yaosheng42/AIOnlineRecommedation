@@ -48,12 +48,11 @@ public class DataInjectContextListener implements ServletContextListener {
         Calendar now  = Calendar.getInstance();
         int nowHour = now.get(Calendar.HOUR_OF_DAY);
         int afterHour = endHour - nowHour;
-        DataInjectService temp_dj =new DataInjectService(authorDao, authorPaperDao, paperDao);
-        temp_dj.dataInject_init();
+
+        dj.dataInject_init();
         // 定义一个任务
         final Runnable task =new Runnable() {
             public void run() {
-                DataInjectService dj =new DataInjectService(authorDao, authorPaperDao, paperDao);
                 dj.dataInject();
             }
         };
@@ -74,7 +73,6 @@ public class DataInjectContextListener implements ServletContextListener {
      * 在所有的filter和servlet初始化之前，所有的ServletContextListeners会收到[您所在的web应用的初始化工作开始啦]通知
      */
     public void contextInitialized(ServletContextEvent arg0) {
-        dj = new DataInjectService(authorDao, authorPaperDao, paperDao);
         System.out.println("contextInitialized……");
         LogUtils.info("contextInitialized……",DataInjectContextListener.class);
         taskBegin();
