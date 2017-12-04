@@ -11,8 +11,8 @@ import com.seu.kse.util.CommonFileUtil;
 import com.seu.kse.util.Configuration;
 import com.seu.kse.util.LogUtils;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -24,21 +24,28 @@ import java.util.*;
  * add by Yaosheng on 2017/12/4
  */
 
-
+@Service
 public class DataInjectService {
 
-    private ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
-
-    private AuthorMapper authorDao= (AuthorMapper) ac.getBean("authorMapper");
 
 
-    private AuthorPaperMapper authorPaperDao = (AuthorPaperMapper) ac.getBean("authorPaperMapper");
+    private final AuthorMapper authorDao;
 
 
-    private PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
+    private final AuthorPaperMapper authorPaperDao ;
+
+
+    private final PaperMapper paperDao ;
 
 
     private static String path= Configuration.arxiv_path;
+
+    @Autowired
+    public DataInjectService(AuthorMapper authorDao, AuthorPaperMapper authorPaperDao, PaperMapper paperDao) {
+        this.authorDao = authorDao;
+        this.authorPaperDao = authorPaperDao;
+        this.paperDao = paperDao;
+    }
 
     public  void dataInject(){
         try{

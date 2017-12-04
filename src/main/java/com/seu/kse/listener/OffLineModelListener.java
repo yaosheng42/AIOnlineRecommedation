@@ -3,6 +3,8 @@ package com.seu.kse.listener;
 
 import com.seu.kse.service.impl.RecommendationService;
 import com.seu.kse.util.LogUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -11,8 +13,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
+@Service
 public class OffLineModelListener implements ServletContextListener {
+    @Autowired
     RecommendationService rsService ;
     public void taskBegin() {
         //获取时间，设置任务在晚上24 后启动

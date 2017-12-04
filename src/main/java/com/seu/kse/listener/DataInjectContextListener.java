@@ -6,6 +6,8 @@ package com.seu.kse.listener;
 
 import com.seu.kse.service.DataInjectService;
 import com.seu.kse.util.LogUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -21,8 +23,10 @@ import java.util.concurrent.TimeUnit;
  * API中描述：ServletContextListener继承于EventListener，其实现者会在web应用的servlet context改变的时候收到事件通知，
  * 但是还必须要配置到web应用的部署文件中（web.xml）
  */
+@Service
 public class DataInjectContextListener implements ServletContextListener {
 
+    @Autowired
     private DataInjectService dj ;
 
     /**
@@ -44,12 +48,12 @@ public class DataInjectContextListener implements ServletContextListener {
         Calendar now  = Calendar.getInstance();
         int nowHour = now.get(Calendar.HOUR_OF_DAY);
         int afterHour = endHour - nowHour;
-        DataInjectService temp_dj =new DataInjectService();
+        DataInjectService temp_dj =new DataInjectService(authorDao, authorPaperDao, paperDao);
         temp_dj.dataInject_init();
         // 定义一个任务
         final Runnable task =new Runnable() {
             public void run() {
-                DataInjectService dj =new DataInjectService();
+                DataInjectService dj =new DataInjectService(authorDao, authorPaperDao, paperDao);
                 dj.dataInject();
             }
         };
@@ -70,7 +74,7 @@ public class DataInjectContextListener implements ServletContextListener {
      * 在所有的filter和servlet初始化之前，所有的ServletContextListeners会收到[您所在的web应用的初始化工作开始啦]通知
      */
     public void contextInitialized(ServletContextEvent arg0) {
-        dj = new DataInjectService();
+        dj = new DataInjectService(authorDao, authorPaperDao, paperDao);
         System.out.println("contextInitialized……");
         LogUtils.info("contextInitialized……",DataInjectContextListener.class);
         taskBegin();
