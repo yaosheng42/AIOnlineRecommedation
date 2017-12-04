@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataInjectContextListener implements ServletContextListener {
 
-
+    private DataInjectService dj ;
 
     /**
      * 本方法的描述：
@@ -70,7 +70,7 @@ public class DataInjectContextListener implements ServletContextListener {
      * 在所有的filter和servlet初始化之前，所有的ServletContextListeners会收到[您所在的web应用的初始化工作开始啦]通知
      */
     public void contextInitialized(ServletContextEvent arg0) {
-
+        dj = new DataInjectService();
         System.out.println("contextInitialized……");
         LogUtils.info("contextInitialized……",DataInjectContextListener.class);
         taskBegin();

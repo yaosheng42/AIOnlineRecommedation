@@ -2,6 +2,8 @@ package com.seu.kse.listener;
 
 import com.seu.kse.service.impl.RecommendationService;
 import com.seu.kse.util.LogUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 
 import javax.servlet.ServletContextEvent;
@@ -15,10 +17,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by yaosheng on 2017/6/3.
  */
+@Service
 public class RecommedationListener implements ServletContextListener {
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     ScheduledFuture<?> taskHandle;
-    RecommendationService rs = new RecommendationService();
+    @Autowired
+    RecommendationService rs;
 
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         System.out.println("初始化推荐算法");
