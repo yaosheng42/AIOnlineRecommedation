@@ -38,15 +38,15 @@
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
 
-  <listener>
-    <listener-class>com.seu.kse.listener.DataInjectContextListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>com.seu.kse.listener.RecommedationListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>com.seu.kse.listener.OffLineModelListener</listener-class>
-  </listener>
+  <!--<listener>-->
+    <!--<listener-class>com.seu.kse.listener.DataInjectContextListener</listener-class>-->
+  <!--</listener>-->
+  <!--<listener>-->
+    <!--<listener-class>com.seu.kse.listener.RecommedationListener</listener-class>-->
+  <!--</listener>-->
+  <!--<listener>-->
+    <!--<listener-class>com.seu.kse.listener.OffLineModelListener</listener-class>-->
+  <!--</listener>-->
 
   <!--
     - Use the Cocoon debug filter together with the Cocoon demo webapp

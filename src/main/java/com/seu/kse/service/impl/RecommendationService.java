@@ -43,9 +43,9 @@ public class RecommendationService {
     private
 
     Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
+
     private final PaperMapper paperDao;
     private final UserMapper userDao;
-
     private final UserPaperBehaviorMapper userPaperBehaviorDao;
 
     @Autowired

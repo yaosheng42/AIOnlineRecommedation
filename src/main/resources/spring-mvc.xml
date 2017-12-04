@@ -26,5 +26,62 @@
         <property name="prefix" value="/" />
         <property name="suffix" value=".jsp" />
     </bean>
+    <!--推荐-->
+    <bean id="recommederTask" class="com.seu.kse.quartz.RecommederTask" />
+    <bean id="jobDetail1" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="recommederTask" />
+        <property name="targetMethod" value="execute" />
+        <!--将并发设置为false-->
+        <property name="concurrent" value="false" />
+    </bean>
 
+    <!--注入数据-->
+    <bean id="dataInjectTask" class="com.seu.kse.quartz.DataInjectTask" />
+    <bean id="jobDetail2" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="dataInjectTask" />
+        <property name="targetMethod" value="execute" />
+
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <!--离线模型更新-->
+    <bean id="updateModelTask" class="com.seu.kse.quartz.OfflineModelTask" />
+    <bean id="jobDetail3" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="updateModelTask" />
+        <property name="targetMethod" value="execute" />
+
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="jobDetail1" />
+        <!--表达式，每 天 执行一次-->
+        <property name="cronExpression" value="08/* * * 1 * ?" />
+    </bean>
+
+    <bean id="trigger2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="jobDetail2" />
+        <!--表达式，每 天 执行一次-->
+        <property name="cronExpression" value="23/* * * 1 * ?" />
+    </bean>
+
+
+    <bean id="trigger3" class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="jobDetail3" />
+        <!--表达式，每 天 执行一次-->
+        <property name="cronExpression" value="00/* * * 1 * ?" />
+    </bean>
+
+
+    <!--  总管理类如果将lazy-init='false'那么容器启动就会执行调度程序   -->
+    <bean id="startQuertz" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" >
+        <property name="triggers">
+            <list>
+                <!--作业调度器,list下可加入其他的调度器-->
+                <ref bean="trigger1" />
+                <ref bean="trigger2" />
+                <ref bean="trigger3" />
+            </list>
+        </property>
+    </bean>
 </beans>
