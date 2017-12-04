@@ -46,7 +46,7 @@ public class RecommendationService {
     private final PaperMapper paperDao;
     private final UserMapper userDao;
 
-    private UserPaperBehaviorMapper userPaperBehaviorDao;
+    private final UserPaperBehaviorMapper userPaperBehaviorDao;
 
     @Autowired
     public RecommendationService(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao) {
