@@ -12,6 +12,7 @@ import com.seu.kse.bean.*;
 import com.seu.kse.dao.UserPaperNoteMapper;
 import com.seu.kse.service.impl.AuthorService;
 import com.seu.kse.service.impl.PaperService;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +28,7 @@ import java.util.*;
  * Created by yaosheng on 2017/6/1.
  */
 
-@Service
+@Controller
 @RequestMapping("/")
 public class PaperInfoController {
 
