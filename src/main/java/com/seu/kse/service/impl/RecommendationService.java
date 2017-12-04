@@ -174,5 +174,5 @@ public class RecommendationService {
         emailSender.send(email,content);
     }
 
-    
+
 }
