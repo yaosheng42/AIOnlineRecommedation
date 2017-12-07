@@ -13,7 +13,7 @@ public class DataInjectTask {
     @Autowired
     public DataInjectTask(DataInjectService dj){
         this.dj = dj;
-        dj.dataInject_init();
+        //dj.dataInject_init();
     }
     public void execute(){
 

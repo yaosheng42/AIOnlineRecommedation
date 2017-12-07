@@ -16,7 +16,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Search Result</title>
+    <title>AI</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
@@ -43,26 +43,26 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="search" class="navbar-brand">AIOnline</a>
+            <a href="/index" class="navbar-brand">AIOnline</a>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">AIpapers</a></li>
-                <li><a href="#">Arxiv</a></li>
+                <li class="active"><a href="/todayArxiv">今日Arxiv</a></li>
+                <li><a href="/recommender">Arxiv 推荐</a></li>
                 <li id="dropdown-tab2" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">dblp<b id="dropdown-square2" class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>
                     <ul id="dropdown-panel2" role="menu" class="dropdown-menu">
                         <li><a href="#">Conferences</a></li>
                         <li><a href="#">Journals</a></li>
                     </ul>
                 </li>
             </ul>
-            <form role="search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" placeholder="Search" class="form-control">
+            <form role="search" class="navbar-form navbar-left" style="width:55%">
+                <div class="form-group" style="width: 80%">
+                    <input type="text" placeholder="Search" class="form-control" style="width: 100%">
                 </div>
                 <button class="btn btn-primary" type="submit">
-                    Submit
+                    查询
                 </button>
             </form>
             <ul class="nav navbar-nav navbar-right">
@@ -92,7 +92,7 @@
 
 <div class="main-content">
     <div class="content-panel">
-        <span style="font-size:1.2em;">搜索结果</span>
+
         <hr style="margin:0 0 20px 0;">
         <c:forEach items="${papers}" var="p" varStatus="loop">
             <article class="blog-main">
@@ -125,18 +125,24 @@
             <hr>
         </c:forEach>
         <div class="paging-panel" >
-            <ul>
-                <li class="btn btn-default li-left"><a href="search?pageNum=${previousPage}">&laquo; 上一页</a></li>
-                <li class="btn btn-default li-right"><a href="search?pageNum=${nextPage}">下一页 &raquo;</a></li>
-            </ul>
+            <c:choose>
+                <c:when test="${paper_num>=limit}">
+                    <ul>
+                        <li class="btn btn-default li-left"><a href="?pageNum=${previousPage}">&laquo; 上一页</a></li>
+                        <li class="btn btn-default li-right"><a href="?pageNum=${nextPage}">下一页 &raquo;</a></li>
+                    </ul>
+                </c:when>
+                <c:otherwise>
+                    <ul>
+                    </ul>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 
 </div>
 <footer class="footer">
-    <p>blog template<br/>
-        <small>© Copyright XXX. by the AmazeUI Team.</small>
-    </p>
+
 </footer>
 
 <!--[if lt IE 9]>

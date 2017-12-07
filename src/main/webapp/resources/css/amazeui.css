@@ -1093,6 +1093,8 @@ select {
   }
   .am-u-lg-12 {
     width: 100%;
+    text-align: justify;
+    font-size: 14px;
   }
   .am-u-lg-pull-0 {
     right: 0;

@@ -90,9 +90,9 @@ public class PaperInfoController {
      */
     @RequestMapping("/paperinfo")
     public String searchPaper(HttpServletRequest request, HttpSession session, Model model){
-        if(!Utils.testConnect()){
+       /* if(!Utils.testConnect()){
             return "/index";
-        }
+        }*/
         User login_user = Utils.testLogin(session,model);
         String id = request.getParameter("id");
         Paper paper = paperService.searchPaper(id);

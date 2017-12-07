@@ -79,7 +79,7 @@ public class RecommendationService {
         try {
             LogUtils.info("init start",RecommendationService.class);
             paper2Vec = new Paper2Vec();
-            paper2Vec.loadPaperVec();
+            //paper2Vec.loadPaperVec();
             cmodel = new CBKNNModel(paper2Vec,true);
 
             emailSender = new EmailSender(Constant.sender,Constant.emailhost);

@@ -51,12 +51,12 @@ public class IndexController {
      * @param model 返回参数
      * @return 地址
      */
-    @RequestMapping("/search")
+    @RequestMapping("/index")
     public String toIndex(HttpServletRequest request,HttpSession session, Model model){
         int limit = 20;
-        if(!Utils.testConnect()){
+        /*if(!Utils.testConnect()){
             return "/index";
-        }
+        }*/
         Utils.testLogin(session,model);
         int pageNum=0;
         if(request.getParameter("pageNum")!=null) {
@@ -69,9 +69,31 @@ public class IndexController {
         //获得作者
         Map<String, List<Author>> authorMap = authorService.getAuthorForPapers(papers);
         model.addAttribute("authorMap",authorMap);
-
+        model.addAttribute("limit",limit);
+        model.addAttribute("paper_num",papers.size());
         return "/index";
     }
+
+
+
+    @RequestMapping(method= RequestMethod.GET,value="/search",produces="text/plain;charset=UTF-8")
+    public @ResponseBody String search(HttpServletRequest request){
+        return "";
+    }
+
+
+    @RequestMapping(method= RequestMethod.GET,value="/todayArxiv",produces="text/plain;charset=UTF-8")
+    public @ResponseBody String searchTodayArxiv(HttpServletRequest request){
+        return "/index";
+    }
+
+    @RequestMapping(method= RequestMethod.GET,value="/recommender",produces="text/plain;charset=UTF-8")
+    public @ResponseBody String recommender(HttpServletRequest request){
+        String uid = request.getParameter("uid");
+        
+        return "/index";
+    }
+
 
     /**
      *
@@ -109,9 +131,9 @@ public class IndexController {
 
     @RequestMapping("/author")
     public String showAuthor(HttpServletRequest request,HttpSession session, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
-        }
+//        if(!Utils.testConnect()){
+//            return "/index";
+//        }
         Utils.testLogin(session,model);
         int aid = Integer.valueOf(request.getParameter("id"));
         Author author = authorService.getAuthorByID(aid);
@@ -138,9 +160,9 @@ public class IndexController {
      */
     @RequestMapping(method= RequestMethod.GET,value="/fouseonauthor",produces="text/plain;charset=UTF-8")
     public @ResponseBody String fouseOnAuthor(HttpServletRequest request,HttpSession session, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
-        }
+//        if(!Utils.testConnect()){
+//            return "/index";
+//        }
         String id = request.getParameter("aid");
         User login_user =Utils.testLogin(session,model);
         if(login_user == null || id == null) return "error";
@@ -157,9 +179,9 @@ public class IndexController {
 
     @RequestMapping("/arxiv")
     public String showArxivPapers(HttpServletRequest request, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
-        }
+//        if(!Utils.testConnect()){
+//            return "/index";
+//        }
         int pageNum =Integer.parseInt(request.getParameter("pageNum"));
         List<Paper> papers = paperService.getArxivPapers(pageNum,20);
         model.addAttribute("papers",papers);

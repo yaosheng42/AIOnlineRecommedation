@@ -24,12 +24,12 @@ import java.util.*;
  */
 
 public class CBKNNModel {
-    ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
-    UserMapper userDao = (UserMapper) ac.getBean("userMapper");
-    UserPaperBehaviorMapper user_paper_Dao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
-    PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    public static Map<String ,List<PaperSim>> paperSims ;
-    public static Paper2Vec paper2Vec ;
+    private ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
+    private UserMapper userDao = (UserMapper) ac.getBean("userMapper");
+    private UserPaperBehaviorMapper user_paper_Dao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
+    private PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
+    private static Map<String ,List<PaperSim>> paperSims ;
+    private static Paper2Vec paper2Vec ;
     public CBKNNModel(){
         paperSims = new HashMap<String, List<PaperSim>>();
         paper2Vec= RecommendationService.getPaper2Vec();
@@ -37,7 +37,7 @@ public class CBKNNModel {
 
     public CBKNNModel(Paper2Vec paper2Vec,boolean open){
         paperSims = new HashMap<String, List<PaperSim>>();
-        this.paper2Vec= paper2Vec;
+        CBKNNModel.paper2Vec= paper2Vec;
         if(open){
             trainSimPaper();
         }else{
@@ -46,7 +46,7 @@ public class CBKNNModel {
         System.out.println("CBKNNModel 初始化完成");
     }
 
-    public void loadPaperSimModel(){
+    private void loadPaperSimModel(){
         FileInputStream fin ;
         URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
         try {
@@ -62,7 +62,7 @@ public class CBKNNModel {
     }
 
 
-    public List<PaperSim> userColdStart(){
+    private List<PaperSim> userColdStart(){
         //针对冷启动用户
         //选择当日的论文
         List<Paper> papers = paperDao.selectPaperOrderByTime(0,5);
@@ -100,21 +100,19 @@ public class CBKNNModel {
     /**
      * 训练获得所有论文的相似论文，并持久化
      */
-    public void trainSimPaper()  {
+    private void trainSimPaper()  {
         //计算相似论文
+        paper2Vec.calPaperVec();
 
-        if(paper2Vec.paperVecs==null || paper2Vec.paperVecs.size() == 0){
-            paper2Vec.calPaperVec();
-        }
         System.out.println("开始计算 paper sims ");
-        System.out.println("papers.size : " + paper2Vec.paperVecs.size());
+        System.out.println("papers.size : " + Paper2Vec.paperVecs.size());
 
-        URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
+        //URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
 
-        for(Map.Entry<String, double[]> e1 : paper2Vec.paperVecs.entrySet()){
+        for(Map.Entry<String, double[]> e1 : Paper2Vec.paperVecs.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
             String pid1 = e1.getKey();
-            for(Map.Entry<String, double[]> e2 : paper2Vec.paperVecs.entrySet()){
+            for(Map.Entry<String, double[]> e2 : Paper2Vec.paperVecs.entrySet()){
                 if(e1==e2) continue;
                 String pid2 = e2.getKey();
                 double sim = ReccommendUtils.cosinSimilarity(e1.getValue(),e2.getValue());
@@ -150,8 +148,7 @@ public class CBKNNModel {
         //4. cal knn paper for user
         List<User> users = userDao.getAllUser();
 
-        if(paper2Vec.paperVecs==null || paper2Vec.paperVecs.size() == 0){
-
+        if(Paper2Vec.paperVecs==null || Paper2Vec.paperVecs.size() == 0){
              paper2Vec.calPaperVec();
         }
         Map<String, List<PaperSim>> users_papers = new HashMap<String, List<PaperSim>>();
@@ -167,12 +164,14 @@ public class CBKNNModel {
                 for(UserPaperBehavior up : user_paper_behaves){
                     int score = up.getInterest();
                     String pid = up.getPid();
-                    double[] vec = paper2Vec.paperVecs.get(pid);
-                    history.put(pid, vec);
-                    weight.put(pid, score);
+                    double[] vec = Paper2Vec.paperVecs.get(pid);
+                    if(vec!=null){
+                        history.put(pid, vec);
+                        weight.put(pid, score);
+                    }
                 }
                 //计算其他论文和history论文中的相似度
-                Iterator iter = paper2Vec.paperVecs.entrySet().iterator();
+                Iterator iter = Paper2Vec.paperVecs.entrySet().iterator();
                 while(iter.hasNext()){
                     Map.Entry<String, double[]> entry = (Map.Entry<String, double[]>) iter.next();
                     String pid = entry.getKey();
