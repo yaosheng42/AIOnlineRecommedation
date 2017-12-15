@@ -40,9 +40,7 @@ public class RecommendationService {
     private static CBKNNModel cmodel;
     private static Paper2Vec paper2Vec;
     private EmailSender emailSender;
-    private
-
-    Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
+    private static Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
 
     private final PaperMapper paperDao;
     private final UserMapper userDao;
@@ -79,6 +77,7 @@ public class RecommendationService {
         try {
             LogUtils.info("init start",RecommendationService.class);
             paper2Vec = new Paper2Vec();
+            paper2Vec.modelByWord2vce(); //服務器內存溢出，如何解決
             //paper2Vec.loadPaperVec();
             cmodel = new CBKNNModel(paper2Vec,true);
 

@@ -5,7 +5,10 @@ import com.seu.kse.dao.PaperMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,6 +93,15 @@ public class PaperService {
     public List<Paper> getArxivPapers(int pageNum, int limit){
         List<Paper> papers =new ArrayList<Paper>();
         papers = paperdao.selectAllArxivPaper();
+        return papers;
+    }
+
+    public List<Paper> getTodayArxivPapers(int pageNum, int limit){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE,-1);
+        Date yesterday = calendar.getTime();
+        String yesterday_str = new SimpleDateFormat("yyyyMMdd").format(yesterday);
+        List<Paper> papers = paperdao.selectTodayArxiv(pageNum, limit, Integer.parseInt(yesterday_str));
         return papers;
     }
 }

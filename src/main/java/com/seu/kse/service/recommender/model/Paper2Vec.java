@@ -6,10 +6,12 @@ import com.seu.kse.service.recommender.CB.CBKNNModel;
 import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommender.ReccommendUtils;
 import com.seu.kse.util.LogUtils;
+import org.deeplearning4j.bagofwords.vectorizer.BagOfWordsVectorizer;
 import org.deeplearning4j.models.embeddings.loader.WordVectorSerializer;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.deeplearning4j.text.sentenceiterator.BasicLineIterator;
 import org.deeplearning4j.text.sentenceiterator.SentenceIterator;
+import org.deeplearning4j.text.stopwords.StopWords;
 import org.deeplearning4j.text.tokenization.tokenizer.preprocessor.CommonPreprocessor;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.DefaultTokenizerFactory;
 import org.deeplearning4j.text.tokenization.tokenizerfactory.TokenizerFactory;
@@ -59,6 +61,7 @@ public class Paper2Vec {
                     .windowSize(5)
                     .iterate(iter)
                     .tokenizerFactory(t)
+                    .stopWords(StopWords.getStopWords())
                     .build();
 
             System.out.println("Fitting Word2Vec model....");
@@ -83,6 +86,20 @@ public class Paper2Vec {
         }
 
     }
+
+    public void modelByTFIDF(){
+        BagOfWordsVectorizer bofvec;
+        bofvec = new BagOfWordsVectorizer.Builder()
+                    .setMinWordFrequency(5)
+                    .setStopWords(StopWords.getStopWords())
+                    .allowParallelTokenization(true)
+
+                    .build();
+
+    }
+
+
+
 
     public Word2Vec loadWord2VecModelFromText(){
         LogUtils.info("loading word2vec from Text File",Paper2Vec.class);

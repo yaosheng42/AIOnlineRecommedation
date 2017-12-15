@@ -137,6 +137,7 @@ public class PaperInfoController {
         authorMap = authorService.getAuthorForPapers(papers);
         model.addAttribute("authorMap",authorMap);
         model.addAttribute("refPapers",papers);
+        model.addAttribute("tag",0);
         return "/paperinfo";
     }
     /**

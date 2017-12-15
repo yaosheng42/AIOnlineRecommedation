@@ -4,9 +4,9 @@ package com.seu.kse.quartz;
 import com.seu.kse.service.impl.RecommendationService;
 import com.seu.kse.util.LogUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
+
+
 public class RecommederTask {
 
     private  final RecommendationService rs;

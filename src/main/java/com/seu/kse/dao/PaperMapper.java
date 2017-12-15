@@ -2,6 +2,7 @@ package com.seu.kse.dao;
 
 import com.seu.kse.bean.Paper;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PaperMapper {
@@ -20,6 +21,8 @@ public interface PaperMapper {
     int updateByPrimaryKey(Paper record);
 
     List<Paper> selectPaperOrderByTime(int pageNum, int limit);
+
+    List<Paper> selectTodayArxiv(int pageNum, int limit,int time);
 
     List<Paper> selectAllPaper();
 

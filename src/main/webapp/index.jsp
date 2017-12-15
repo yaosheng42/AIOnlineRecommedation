@@ -31,6 +31,7 @@
     <script type="text/javascript" src="<%=basePath%>resources/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>resources/js/jquery.json-2.2.min.js"></script>
     <script type="text/javascript" src="<%=basePath%>resources/js/paneltabchange.js"></script>
+    <script type="text/javascript" src="<%=basePath%>resources/js/search.js"></script>
 </head>
 <body>
 <header class="am-topbar">
@@ -43,12 +44,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/index" class="navbar-brand">AIOnline</a>
+            <a href="/" class="navbar-brand">AIOnline</a>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/todayArxiv">今日Arxiv</a></li>
-                <li><a href="/recommender">Arxiv 推荐</a></li>
+                <c:if test="${tag == 0}">
+                    <li><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+                <c:if test="${tag == 1}">
+                    <li class="active"><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+
+                <c:if test="${tag == 2}">
+                    <li><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li class="active"><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+
                 <li id="dropdown-tab2" class="dropdown">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>
                     <ul id="dropdown-panel2" role="menu" class="dropdown-menu">
@@ -57,9 +70,10 @@
                     </ul>
                 </li>
             </ul>
-            <form role="search" class="navbar-form navbar-left" style="width:55%">
+            <form id=“search” role="search" class="navbar-form navbar-left" style="width:55%" action="/search" onsubmit="return submitForm(this)" method="post">
                 <div class="form-group" style="width: 80%">
-                    <input type="text" placeholder="Search" class="form-control" style="width: 100%">
+                    <input id = "terms" name = "terms" type="text" placeholder="Search" class="form-control" style="width: 100%">
+                    <input id = "tag" name = "tag" type="hidden" value="${tag}">
                 </div>
                 <button class="btn btn-primary" type="submit">
                     查询
@@ -102,19 +116,19 @@
                 <c:forEach items="${authorMap.get(p.id)}" var="author" varStatus="a_loop">
                     <c:choose>
                         <c:when test="${! empty author.aid}">
-                            <span><a href="author?id=${author.aid}"><u>${author.authorname.split(",")[0]}</u></a></span>
+                            <span><a href="author?id=${author.aid}"><u style="text-decoration: none" >${author.authorname.split(",")[0]}</u></a></span>
                         </c:when>
                         <c:otherwise>
-                            <span><a href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
+                            <span><a  href="#"><u style="text-decoration: none" >${author.authorname.split(",")[0]}</u></a></span>
                         </c:otherwise>
                     </c:choose>
 
                 </c:forEach>
                 <span class="paper-time">
-                        ${p.time.toLocaleString().split("-")[0]}
+                        ${p.time.toLocaleString().split("-")[0]}-${p.time.toLocaleString().split("-")[1]}
                 </span>
 
-                <div class="am-g blog-content">
+                <div class="am-g blog-content" style="text-align: justify">
                     <div class="am-u-lg-12">
                         <p>${p.paperAbstract}<a href="paperinfo?id=${p.id}">[more]</a></p>
 

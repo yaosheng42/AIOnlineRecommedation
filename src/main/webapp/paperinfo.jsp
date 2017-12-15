@@ -40,25 +40,40 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="search" class="navbar-brand">AIOnline</a>
+            <a href="/" class="navbar-brand">AIOnline</a>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">AIpapers</a></li>
-                <li><a href="#">Arxiv</a></li>
+                <c:if test="${tag == 0}">
+                    <li><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+                <c:if test="${tag == 1}">
+                    <li class="active"><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+
+                <c:if test="${tag == 2}">
+                    <li><a href="/todayArxiv">今日Arxiv</a></li>
+                    <li class="active"><a href="/recommender">Arxiv 推荐</a></li>
+                </c:if>
+
                 <li id="dropdown-tab2" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">dblp<b id="dropdown-square2" class="caret"></b></a>
+                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>
                     <ul id="dropdown-panel2" role="menu" class="dropdown-menu">
                         <li><a href="#">Conferences</a></li>
                         <li><a href="#">Journals</a></li>
                     </ul>
                 </li>
             </ul>
-            <form role="search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" placeholder="Search" class="form-control">
+            <form id=“search” role="search" class="navbar-form navbar-left" style="width:55%" action="/search" onsubmit="return submitForm(this)" method="post">
+                <div class="form-group" style="width: 80%">
+                    <input id = "terms" name = "terms" type="text" placeholder="Search" class="form-control" style="width: 100%">
+                    <input id = "tag" name = "tag" type="hidden" value="${tag}">
                 </div>
-                <button class="btn btn-primary" type="submit">Submit</button>
+                <button class="btn btn-primary" type="submit">
+                    查询
+                </button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
@@ -102,7 +117,7 @@
 
                     </c:forEach>
                     <span class="paper-time">
-                        ${paper.time.toLocaleString().split("-")[0]}
+                        ${paper.time.toLocaleString().split("-")[0]}-${paper.time.toLocaleString().split("-")[0]}
                     </span>
                     <%--SupportPaper(${paper.id})--%>
                     <div id="starBg" class="star_bg">
@@ -118,7 +133,7 @@
                         <a href="#starScore5" id="stara5" class="star star_5" onclick="return SupportPaper('${paper.id}',5,'${LOGIN_USER.id}')" title="好"><label for="starScore5">好</label></a>
                     </div>
                 </div>
-                <div class="am-g blog-content">
+                <div class="am-g blog-content" style="text-align: justify; font-size: 14px">
                     <div class="am-u-lg-12">
                         <p>${paper.paperAbstract}</p>
 
@@ -178,16 +193,16 @@
                         <c:forEach items="${authorMap.get(p.id)}" var="author" varStatus="a_loop">
                             <c:choose>
                                 <c:when test="${! empty author.aid}">
-                                    <span><a href="author?id=${author.aid}"><u>${author.authorname.split(",")[0]}</u></a></span>
+                                    <span><a style="text-decoration: none" href="author?id=${author.aid}"><u>${author.authorname.split(",")[0]}</u></a></span>
                                 </c:when>
                                 <c:otherwise>
-                                    <span><a href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
+                                    <span><a style="text-decoration: none" href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
                                 </c:otherwise>
                             </c:choose>
 
                         </c:forEach>
                         <span class="paper-time">
-                                ${p.time.toLocaleString().split("-")[0]}
+                                ${p.time.toLocaleString().split("-")[0]}-${p.time.toLocaleString().split("-")[1]}
                         </span>
                     </article>
                     <hr>
@@ -337,9 +352,7 @@
 
 </div>
 <footer class="footer">
-    <p>blog template<br/>
-        <small>© Copyright XXX. by the AmazeUI Team.</small>
-    </p>
+
 </footer>
 <!--[if lt IE 9]>
 <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>

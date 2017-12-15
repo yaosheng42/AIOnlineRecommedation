@@ -40,7 +40,7 @@ public class loginController {
             }
             session.setAttribute(Constant.CURRENT_USER,user);
         }
-        return "redirect:/search";
+        return "redirect:/";
     }
 
     @RequestMapping("/logout")
