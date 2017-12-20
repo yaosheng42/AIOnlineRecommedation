@@ -41,26 +41,33 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="search" class="navbar-brand">AIOnline</a>
+            <a href="./" class="navbar-brand">AIOnline</a>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">AIpapers</a></li>
-                <li><a href="#">Arxiv</a></li>
-                <li id="dropdown-tab2" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">dblp<b id="dropdown-square2" class="caret"></b></a>
-                    <ul id="dropdown-panel2" role="menu" class="dropdown-menu">
-                        <li><a href="#">Conferences</a></li>
-                        <li><a href="#">Journals</a></li>
-                    </ul>
-                </li>
+                <c:if test="${tag == 0}">
+                    <li><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li><a href="/recommender">Arxiv 推荐</a></li>--%>
+                </c:if>
+                <c:if test="${tag == 1}">
+                    <li class="active"><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li><a href="/recommender">Arxiv 推荐</a></li>--%>
+                </c:if>
+
+                <c:if test="${tag == 2}">
+                    <li><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li class="active"><a href="/recommender">Arxiv 推荐</a></li>--%>
+                </c:if>
+
+                <%--<li id="dropdown-tab2" class="dropdown">--%>
+                <%--<a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>--%>
+                <%--<ul id="dropdown-panel2" role="menu" class="dropdown-menu">--%>
+                <%--<li><a href="#">Conferences</a></li>--%>
+                <%--<li><a href="#">Journals</a></li>--%>
+                <%--</ul>--%>
+                <%--</li>--%>
             </ul>
-            <form role="search" class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" placeholder="Search" class="form-control">
-                </div>
-                <button class="btn btn-primary" type="submit">Submit</button>
-            </form>
+
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
                     <c:when test="${! empty LOGIN_USER}">
@@ -78,7 +85,7 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="login/login.jsp">登陆</a></li>
+                        <li><a href="login/login.jsp">登录</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
@@ -119,7 +126,7 @@
 
                 <br>
                 <hr style="margin-top: 40px;">
-                <form class="form-horizontal" method="post" action="/updateUser">
+                <form class="form-horizontal" method="post" action="./updateUser">
                     <input name="uid" type="text" value="${LOGIN_USER.id}" style="display: none;">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">用户名</label>
@@ -146,7 +153,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn-save btn btn-sm btn-primary">修改个人信息</button>
+                        <button style="float:right" type="submit" class="btn-save btn btn-sm btn-primary">修改个人信息</button>
                     </div>
                 </form>
             </div>
@@ -165,8 +172,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn-save btn btn-sm btn-primary" onclick="return save_writer_paper('${LOGIN_USER.id}','${0}')">提交论文</button>
-                        <label  >暂不支持PDF上传</label>
+                        <button style="float:right" type="submit" class="btn-save btn btn-sm btn-primary" onclick="return save_writer_paper('${LOGIN_USER.id}','${0}')">提交论文</button>
+
                     </div>
                 </form>
             </div>
@@ -179,7 +186,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn-save btn btn-sm btn-primary" onclick="return addTag('${LOGIN_USER.id}')">提交标签</button>
+                        <button type="submit" style="float:right" class="btn-save btn btn-sm btn-primary" onclick="return addTag('${LOGIN_USER.id}')">提交标签</button>
                     </div>
 
                 </form>
@@ -199,8 +206,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn-save btn btn-sm btn-primary" ONCLICK="return save_interest_paper('${LOGIN_USER.id}','${1}')">提交论文</button>
-                        <label  >暂不支持PDF上传</label>
+                        <button style="float:right" type="submit" class="btn-save btn btn-sm btn-primary" ONCLICK="return save_interest_paper('${LOGIN_USER.id}','${1}')">提交论文</button>
+
                     </div>
                 </form>
                 <hr>
@@ -230,12 +237,7 @@
                     </article>
                     <hr>
                 </c:forEach>
-                <div class="paging-panel" >
-                    <ul>
-                        <li class="btn btn-default li-left"><a href="#">&laquo; 上一页</a></li>
-                        <li class="btn btn-default li-right"><a href="#">下一页 &raquo;</a></li>
-                    </ul>
-                </div>
+
             </div>
             <div id="panel6" class="user-panel">
                 <c:forEach items="${writerPapers}" var="p" varStatus="loop">
@@ -261,12 +263,7 @@
                     </article>
                     <hr>
                 </c:forEach>
-                <div class="paging-panel" >
-                    <ul>
-                        <li class="btn btn-default li-left"><a href="#">&laquo; 上一页</a></li>
-                        <li class="btn btn-default li-right"><a href="#">下一页 &raquo;</a></li>
-                    </ul>
-                </div>
+
             </div>
         </div>
 

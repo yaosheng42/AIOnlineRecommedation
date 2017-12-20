@@ -30,7 +30,7 @@ public class PaperDocument {
         BufferedWriter bufferedWriter = null;
         try {
             File file =new File(filePath);
-            System.out.println(filePath);
+
             if(!file.exists()){
                 file.createNewFile();
             }

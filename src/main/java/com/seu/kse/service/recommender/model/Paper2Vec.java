@@ -3,6 +3,7 @@ package com.seu.kse.service.recommender.model;
 import com.seu.kse.bean.Paper;
 import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.service.recommender.CB.CBKNNModel;
+import com.seu.kse.service.recommender.RecommenderCache;
 import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommender.ReccommendUtils;
 import com.seu.kse.util.LogUtils;
@@ -20,6 +21,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +53,7 @@ public class Paper2Vec {
          */
             t.setTokenPreProcessor(new CommonPreprocessor());
             //log.info("Building model....");
-            System.out.println("Building model....");
+
             LogUtils.info("Building word2vec model ...",Paper2Vec.class);
             vec = new Word2Vec.Builder()
                     .minWordFrequency(5)
@@ -64,10 +66,10 @@ public class Paper2Vec {
                     .stopWords(StopWords.getStopWords())
                     .build();
 
-            System.out.println("Fitting Word2Vec model....");
+
             LogUtils.info("Fitting Word2Vec model....",Paper2Vec.class);
             vec.fit();
-            System.out.println("Writing word vectors to text file....");
+
             LogUtils.info("Writing word vectors to text file....",Paper2Vec.class);
             // Write word vectors to file
             URL url = Thread.currentThread().getContextClassLoader().getResource(Configuration.modelFile);
@@ -87,19 +89,6 @@ public class Paper2Vec {
 
     }
 
-    public void modelByTFIDF(){
-        BagOfWordsVectorizer bofvec;
-        bofvec = new BagOfWordsVectorizer.Builder()
-                    .setMinWordFrequency(5)
-                    .setStopWords(StopWords.getStopWords())
-                    .allowParallelTokenization(true)
-
-                    .build();
-
-    }
-
-
-
 
     public Word2Vec loadWord2VecModelFromText(){
         LogUtils.info("loading word2vec from Text File",Paper2Vec.class);
@@ -112,9 +101,9 @@ public class Paper2Vec {
             FileInputStream fin = new FileInputStream(CBKNNModel.class.getClassLoader().getResource(Configuration.paper_vec).getPath());
             ObjectInputStream oin = new ObjectInputStream(fin);
             LogUtils.info("loading paper vector",Paper2Vec.class);
-            System.out.println("载入paper向量");
+
             paperVecs=(Map<String, double[]>) oin.readObject();
-            System.out.println("加载完成paper向量");
+
             LogUtils.info("loading paper vector complete",Paper2Vec.class);
 
         } catch (FileNotFoundException e) {
@@ -134,7 +123,10 @@ public class Paper2Vec {
             List<Paper> papers = paperDao.selectAllPaper();
             //获得每一篇论文的词表,按空格分词
             Word2DocByAve w2d = new Word2DocByAve();
+            RecommenderCache.paperRowMapID = new ArrayList<String>();
             for(Paper paper : papers){
+                //构建ID映射
+                RecommenderCache.paperRowMapID.add(paper.getId());
                 String title = paper.getTitle();
                 String paperAbstract = paper.getPaperAbstract();
                 String[] words1 = ReccommendUtils.segmentation(title);
@@ -152,7 +144,7 @@ public class Paper2Vec {
             }
 
             try{
-                String root_path = CBKNNModel.class.getClassLoader().getResource("/").getPath();
+                String root_path = Paper2Vec.class.getClassLoader().getResource("/").getPath();
                 FileOutputStream fos = new FileOutputStream(root_path+"/"+Configuration.paper_vec);
                 ObjectOutputStream os = new ObjectOutputStream(fos);
                 os.writeObject(paperVecs);
@@ -161,7 +153,7 @@ public class Paper2Vec {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        System.out.println("paper2vec load 完成");
+
         LogUtils.info("loading paper2vec model complete",Paper2Vec.class);
 
     }

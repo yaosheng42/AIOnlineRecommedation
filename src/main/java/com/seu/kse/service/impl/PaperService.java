@@ -2,6 +2,8 @@ package com.seu.kse.service.impl;
 
 import com.seu.kse.bean.Paper;
 import com.seu.kse.dao.PaperMapper;
+import com.seu.kse.service.recommender.RecommenderCache;
+import com.seu.kse.service.recommender.model.PaperSim;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -27,7 +29,7 @@ public class PaperService {
      * @return
      */
     public List<Paper> selectPaperByTime(int start,int end){
-        List<Paper> papers=paperdao.selectPaperOrderByTime(start,end);
+        List<Paper> papers=paperdao.selectPaperOrderByTime(start,end,10);
         return papers;
     }
     /**
@@ -101,7 +103,25 @@ public class PaperService {
         calendar.add(Calendar.DATE,-1);
         Date yesterday = calendar.getTime();
         String yesterday_str = new SimpleDateFormat("yyyyMMdd").format(yesterday);
-        List<Paper> papers = paperdao.selectTodayArxiv(pageNum, limit, Integer.parseInt(yesterday_str));
+        List<Paper> papers = paperdao.selectTodayArxiv(pageNum, limit, Integer.parseInt(yesterday_str),0);
         return papers;
+    }
+
+    /**
+     * 获取论文的k个相似论文
+     * @param pid 论文id
+     * @param k  最相似的k个
+     * @return
+     */
+    public List<Paper> getSimPaper(String pid, int k){
+        List<Paper> res = new ArrayList<Paper>();
+        List<PaperSim> sims = new ArrayList<PaperSim>();
+        if(RecommenderCache.similarPaperList != null && RecommenderCache.similarPaperList.size()!=0){
+            sims = RecommenderCache.similarPaperList.get(pid);
+        }
+        for(int i=0 ;i<k;i++){
+            if(sims!=null) res.add(paperdao.selectByPrimaryKey(sims.get(i).getPid()));
+        }
+        return  res;
     }
 }

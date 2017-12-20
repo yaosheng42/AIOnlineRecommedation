@@ -6,7 +6,7 @@ function save_writer_paper(uid, type){
 
     if(uid==undefined){
         if(confirm("请先登陆")){
-            window.location="/login/login.jsp";
+            window.location="./login/login.jsp";
         }
         return false;
     }
@@ -15,10 +15,12 @@ function save_writer_paper(uid, type){
 
     console.dir(paper_title);
     var success = function(msg) {
-        console.dir("success"+" for paper: "+uid);
+
+        alert("上传成功");
     };
     var error = function(msg){
-        console.dir("error"+" for paper: "+uid);
+
+        alert("上传失败");
     };
     $.ajax({
         type : "POST",
@@ -33,6 +35,7 @@ function save_writer_paper(uid, type){
      var stara = document.getElementById("stara"+k);
      addClass(stara,"fixed");
      }*/
+
     return false;
 }
 
@@ -41,7 +44,7 @@ function save_interest_paper(uid, type){
 
     if(uid==undefined){
         if(confirm("请先登陆")){
-            window.location="/login/login.jsp";
+            window.location="./login/login.jsp";
         }
         return false;
     }
@@ -51,9 +54,11 @@ function save_interest_paper(uid, type){
     console.dir(paper_title);
     var success = function(msg) {
         console.dir("success"+" for paper: "+uid);
+        alert("上传成功");
     };
     var error = function(msg){
         console.dir("error"+" for paper: "+uid);
+        alert("上传失败");
     };
     $.ajax({
         type : "POST",
@@ -68,5 +73,6 @@ function save_interest_paper(uid, type){
      var stara = document.getElementById("stara"+k);
      addClass(stara,"fixed");
      }*/
+
     return false;
 }

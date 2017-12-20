@@ -7,6 +7,7 @@ import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.dao.UserPaperQuestionMapper;
 import com.seu.kse.service.impl.RecommendationService;
 import com.seu.kse.service.recommender.CB.CBKNNModel;
+import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
 import com.seu.kse.dao.UserPaperNoteMapper;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -52,6 +54,11 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.POST,value="/takenotes",produces="text/plain;charset=UTF-8")
     public @ResponseBody String takeNotesForPaper(HttpServletRequest request, HttpSession session, Model model){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),PaperInfoController.class);
+        }
         String pid = request.getParameter("pid");
         User login_user = Utils.testLogin(session,model);
         //String title = request.getParameter("notetitle");
@@ -68,9 +75,10 @@ public class PaperInfoController {
         String paper_model = request.getParameter("paper_model");
         String related_word = request.getParameter("related_word");
         String paper_brief_comment =request.getParameter("paper_brief_comment");
+        String paper_area = request.getParameter("paper_area");
         UserPaperNoteWithBLOBs upnote = new UserPaperNoteWithBLOBs(login_user.getId(),pid,
-                paper_brief_comment,author,paper_source,paper_keywords,paper_tech,author_place,
-                paper_brief_comment,"",paper_model,problems,related_word,paper_brief_comment);
+                paper_source,author,paper_source,paper_keywords,paper_tech,author_place,
+                paper_brief_comment,paper_area,paper_model,problems,related_word,paper_brief_comment);
         if(old != null){
             //更新
             userPaperNoteDao.updateByPrimaryKey(upnote);
@@ -96,7 +104,7 @@ public class PaperInfoController {
         User login_user = Utils.testLogin(session,model);
         String id = request.getParameter("id");
         Paper paper = paperService.searchPaper(id);
-
+        //System.out.println("URL: "+paper.getUrl());
         paper.setId(id);
         model.addAttribute("paper",paper);
         List<Author> authorsOfpaper = authorService.getAuthorsByPaper(id);
@@ -112,10 +120,11 @@ public class PaperInfoController {
 
         if(login_user!=null) {
            //UserPaperNoteKey keys = new UserPaperNoteKey(login_user.getId(),paper.getId());
+            UserPaperNoteKey key = new UserPaperNoteKey(login_user.getId(),paper.getId());
+            UserPaperNoteWithBLOBs paperNote = userPaperNoteDao.selectByPrimaryKey(key);
+            //System.out.println(paperNotes.size());
+            model.addAttribute("note",paperNote);
 
-            List<UserPaperNoteWithBLOBs> paperNotes = userPaperNoteDao.selectByPrimaryPaperIDKey(paper.getId());
-            System.out.println(paperNotes.size());
-            model.addAttribute("notes",paperNotes);
         }
         //标签
         List<String> tags=new ArrayList<String>();
@@ -126,11 +135,10 @@ public class PaperInfoController {
             tags.add(t.getTagname());
         }
         model.addAttribute("tags", tags);
-        CBKNNModel cnMolde = RecommendationService.getCBKKModel();
         Map<String, List<Author>> authorMap ;
         List<Paper> papers;
         if (paper.getPublisher().contains("arxiv")){
-            papers=cnMolde.getSimPaper(paper.getId(),10);
+            papers=paperService.getSimPaper(paper.getId(),10);
         }else{
             papers= paperService.getRefPaper(paper.getId());
         }
@@ -147,9 +155,7 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.GET,value="/searchnotes",produces="text/plain;charset=UTF-8")
     public @ResponseBody String searchNotesForPaper(HttpServletRequest request,HttpSession session, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
-        }
+
         String id = request.getParameter("pid");
         User login_user = Utils.testLogin(session,model);
         if (id == null || login_user==null) return "error";
@@ -176,8 +182,10 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.POST,value="/takequestions",produces="text/plain;charset=UTF-8")
     public @ResponseBody String takeQuestionsForPaper(HttpServletRequest request,HttpSession session, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),PaperInfoController.class);
         }
         String id = request.getParameter("paperid");
         String title = request.getParameter("questiontitle");
@@ -198,9 +206,7 @@ public class PaperInfoController {
      */
     @RequestMapping(method= RequestMethod.GET,value="/supportpaper",produces="text/plain;charset=UTF-8")
     public @ResponseBody String supportForOnePaper(HttpServletRequest request,HttpSession session, Model model){
-        if(!Utils.testConnect()){
-            return "/index";
-        }
+
         User login_user = Utils.testLogin(session,model);
         if(login_user == null) return "error";
         String id = request.getParameter("pid");

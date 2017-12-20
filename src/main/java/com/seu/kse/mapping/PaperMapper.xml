@@ -28,7 +28,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, title, keywords, type, publisher, time
+    id, title, keywords, type, publisher, time, url
   </sql>
   <sql id="Blob_Column_List" >
     paper_abstract
@@ -64,6 +64,15 @@
     from paper
   </select>
 
+  <select id="selectLimitPaper" resultMap="ResultMapWithBLOBs">
+    SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from paper limit #{arg0}
+  </select>
+
+
   <select id="selectAllArxivPaper" resultMap="ResultMapWithBLOBs">
     SELECT
     <include refid="Base_Column_List" />
@@ -78,7 +87,7 @@
     ,
     <include refid="Blob_Column_List" />
     from paper
-    ORDER BY time DESC LIMIT #{arg0}, #{arg1}
+    WHERE type &lt; #{arg2} ORDER BY time DESC LIMIT #{arg0}, #{arg1}
   </select>
 
 
@@ -87,7 +96,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from paper  WHERE time >= #{arg2}
+    from paper  WHERE time >= #{arg2} and type = #{arg3}
     ORDER BY time DESC LIMIT #{arg0}, #{arg1}
   </select>
 

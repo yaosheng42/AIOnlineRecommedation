@@ -5,6 +5,7 @@ import com.seu.kse.bean.User;
 import com.seu.kse.service.IUserService;
 import com.seu.kse.service.impl.UserFieldService;
 import com.seu.kse.bean.userFieldsKey;
+import com.seu.kse.util.LogUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
@@ -29,6 +31,11 @@ public class loginController {
 
     @RequestMapping("/login")
     public String login(HttpServletRequest request,HttpSession session, Model model){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),UserInfoController.class);
+        }
         String userEmail=request.getParameter("email");
         String psw=request.getParameter("password");
 //        String utypestr=request.getParameter("utype");
@@ -52,6 +59,11 @@ public class loginController {
     @Transactional
     @RequestMapping("/register")
     public String register(HttpServletRequest request, HttpSession session, Model model){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),UserInfoController.class);
+        }
         String uname=request.getParameter("name");
         String upsw=request.getParameter("password");
         String email=request.getParameter("email");
@@ -80,7 +92,7 @@ public class loginController {
             }
             session.setAttribute(Constant.CURRENT_USER,user);
         }
-        return "redirect:/search";
+        return "redirect:/";
     }
 
     /**

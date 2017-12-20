@@ -43,7 +43,7 @@ charset=UTF-8"
           <span id="msg-notice" style="margin-left:30px;color:red">${result}</span>
       </div>
       <div class="panel-body">
-        <form id="submitform" name="registerform" action="/login/register" onsubmit="return submitForm(this)" method="post">
+        <form id="submitform" name="registerform" action="../login/register" onsubmit="return submitForm(this)" method="post">
           <div class="form-group">
             <label>邮箱</label>
             <input id="email" name="email" type="email" placeholder="Enter email" class="form-control">

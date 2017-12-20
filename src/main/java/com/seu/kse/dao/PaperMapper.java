@@ -20,9 +20,9 @@ public interface PaperMapper {
 
     int updateByPrimaryKey(Paper record);
 
-    List<Paper> selectPaperOrderByTime(int pageNum, int limit);
+    List<Paper> selectPaperOrderByTime(int pageNum, int limit,int type);
 
-    List<Paper> selectTodayArxiv(int pageNum, int limit,int time);
+    List<Paper> selectTodayArxiv(int pageNum, int limit,int time,int type);
 
     List<Paper> selectAllPaper();
 
@@ -31,4 +31,6 @@ public interface PaperMapper {
     Integer countPaperId(String id);
 
     List<Paper> selectAllArxivPaper();
+
+    List<Paper> selectLimitPaper(int limit);
 }

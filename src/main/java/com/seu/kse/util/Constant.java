@@ -5,7 +5,7 @@ public class Constant {
     public static final String CURRENT_USER = "LOGIN_USER";
     public static String sender = "877717444@qq.com";
     public static String emailhost = "smtp.qq.com";
-    public static String paperinfoURL = "http://"+URL+"8090/AIOnlineRecommedation/paperinfo?id=";
+    public static String paperinfoURL = "http://"+URL+":8090/AIOnlineRecommendation/paperinfo?id=";
     public static String ES_INDEX = "reasearch_kg";
     public static String ES_TYPE = "paper";
     public static String[] ES_SEARCH_FIELDS = {"title","paper_abstract"};

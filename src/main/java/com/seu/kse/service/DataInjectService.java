@@ -15,8 +15,11 @@ import com.seu.kse.util.LogUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -58,7 +61,7 @@ public class DataInjectService {
 
 
             //date = "2017_10_16";
-            System.out.println(date);
+
             File file=new File(path+"/"+date);
 
             if(!file.exists()) {
@@ -71,12 +74,12 @@ public class DataInjectService {
             }
             for(File f:list)
                 DataInjectByFile(f);
-            System.out.println("开始导入数据！");
+
             LogUtils.info("开始导入数据！",DataInjectService.class);
 
 
         }catch (Exception e){
-            e.printStackTrace();
+
             LogUtils.error(e.getMessage(),DataInjectService.class);
         }
 
@@ -85,19 +88,20 @@ public class DataInjectService {
 
         Calendar c = Calendar.getInstance();
         Date now = c.getTime();
-        c.set(2017,Calendar.NOVEMBER,14);
-        System.out.println("now :"+now);
+        c.set(2017,Calendar.NOVEMBER,10);
+
         Date cur =  c.getTime();
-        System.out.println("cur :"+cur);
+
         while(cur.before(now)){
             try{
-                System.out.print("cur : "+cur);
+                LogUtils.info("process cur :"+cur,DataInjectService.class);
+
                 SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd");
                 String date = sf.format(cur);
-                System.out.println(date);
+
                 File file=new File(path+"/"+date);
                 if(!file.exists()) {
-                    System.out.println(date+"无数据");
+
                     LogUtils.info(date+"无数据",DataInjectService.class);
                     break;
                 }
@@ -108,12 +112,13 @@ public class DataInjectService {
                 }
                 for(File f:list)
                     DataInjectByFile(f);
-                System.out.println("导入 "+date+" 数据");
+
                 LogUtils.info("导入 "+date+" 数据",DataInjectService.class);
 
 
             }catch (Exception e){
-                e.printStackTrace();
+
+                LogUtils.error(e.getMessage(),DataInjectService.class);
             }
             c.add(Calendar.DATE,1);
             cur =  c.getTime();
@@ -131,8 +136,7 @@ public class DataInjectService {
                 GenerateDataRecord(inputList);
             }
         }catch (Exception e){
-            System.err.println("in DataInjectByFile");
-            e.printStackTrace();
+            LogUtils.error(e.getMessage(),DataInjectService.class);
             ArrayList<String> inputList= CommonFileUtil.read(file);
             if(inputList==null||inputList.isEmpty()){
                 LogUtils.error("Empty File:"+file.getName(),DataInjectService.class);
@@ -162,7 +166,7 @@ public class DataInjectService {
         Paper paper=generatePaper(paperName,paperInfo);
         List<Author> authors=generateAuthorList(authorList);
         int i = insertPaperRecord(paper);
-        System.out.print(i);
+
         List<Integer> aIdList=insertAuthorList(authors);
         if(aIdList!=null&&aIdList.size()>0){
             insertAuthorPaper(paperName,aIdList);
@@ -183,10 +187,20 @@ public class DataInjectService {
         if(paperInfo.containsKey("subjects")){
             paper.setKeywords(paperInfo.get("subjects"));
         }
+        if(paperInfo.containsKey("time")){
+            String time = paperInfo.get("time");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date time_date = format.parse(time);
+                paper.setTime(time_date);
+            } catch (ParseException e) {
+                Date time_date= new java.sql.Date(new Date().getTime());
+                paper.setTime(time_date);
+            }
+        }
         paper.setPublisher("arxiv");
         paper.setType(0);
-        Date time= new java.sql.Date(new Date().getTime());
-        paper.setTime(time);
+
         return paper;
     }
     private static List<Author> generateAuthorList(ArrayList<String> authorList){
@@ -195,8 +209,8 @@ public class DataInjectService {
         Author author;
         for(String a:authorList){
             String[] sp = a.split(",");
-            String aname = sp[0];
-            String aurl = sp[1];
+            String aname = sp[0].trim();
+            String aurl = sp[1].trim();
             author=new Author();
             author.setAuthorname(aname);
             author.setUrl(author_add+aurl);
@@ -212,7 +226,17 @@ public class DataInjectService {
     private  int  insertPaperRecord(Paper p){
         //生成关键字
 
-        return paperDao.insert(p);
+        //查询是否存在
+        Paper temp = paperDao.selectByPrimaryKey(p.getId());
+        if(temp == null){
+            int line =  paperDao.insert(p);
+            return line;
+        }else{
+            paperDao.updateByPrimaryKey(p);
+            LogUtils.info("更新paper"+p.getId()+"信息",DataInjectService.class);
+        }
+        return 0;
+
     }
 
     private  List<Integer> insertAuthorList(List<Author> authorList){
@@ -232,14 +256,13 @@ public class DataInjectService {
         AuthorPaperKey apK=new AuthorPaperKey();
         apK.setPid(paperId);
         Integer count=authorPaperDao.countPid(apK.getPid());
-
         if(count>0){
             return;
         }
         for(Integer aId:authorIdList){
             apK.setAid(aId);
             int line = authorPaperDao.insertSelective(apK);
-            if(line<=0) System.out.println("insert author error : "+aId);
+            if(line<=0) LogUtils.error("insert author meet error !",DataInjectService.class);
         }
     }
 }

@@ -20,6 +20,6 @@ public class UserServiceTest {
     @Test
     public void testVerificationUser(){
         User user=userService.verification("a@qq.com","a");
-        System.out.println(user.getUname());
+        //System.out.println(user.getUname());
     }
 }

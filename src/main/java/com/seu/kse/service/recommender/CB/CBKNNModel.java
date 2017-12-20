@@ -7,10 +7,12 @@ import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.dao.UserMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.service.impl.RecommendationService;
+import com.seu.kse.service.recommender.RecommenderCache;
 import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommender.ReccommendUtils;
 import com.seu.kse.service.recommender.model.Paper2Vec;
 import com.seu.kse.service.recommender.model.PaperSim;
+import com.seu.kse.util.LogUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -28,22 +30,23 @@ public class CBKNNModel {
     private UserMapper userDao = (UserMapper) ac.getBean("userMapper");
     private UserPaperBehaviorMapper user_paper_Dao = (UserPaperBehaviorMapper) ac.getBean("userPaperBehaviorMapper");
     private PaperMapper paperDao = (PaperMapper) ac.getBean("paperMapper");
-    private static Map<String ,List<PaperSim>> paperSims ;
+
     private static Paper2Vec paper2Vec ;
     public CBKNNModel(){
-        paperSims = new HashMap<String, List<PaperSim>>();
+        RecommenderCache.similarPaperList = new HashMap<String, List<PaperSim>>();
         paper2Vec= RecommendationService.getPaper2Vec();
     }
 
     public CBKNNModel(Paper2Vec paper2Vec,boolean open){
-        paperSims = new HashMap<String, List<PaperSim>>();
+        RecommenderCache.similarPaperList = new HashMap<String, List<PaperSim>>();
         CBKNNModel.paper2Vec= paper2Vec;
         if(open){
             trainSimPaper();
         }else{
             loadPaperSimModel();
         }
-        System.out.println("CBKNNModel 初始化完成");
+        LogUtils.info("CBKNNModel 初始化完成",CBKNNModel.class);
+
     }
 
     private void loadPaperSimModel(){
@@ -52,12 +55,13 @@ public class CBKNNModel {
         try {
             fin = new FileInputStream(url.getPath());
             ObjectInputStream oin = new ObjectInputStream(fin);
-            System.out.println("读取 paper sims ");
-            paperSims=(Map<String ,List<PaperSim>>) oin.readObject();
-            System.out.println("paper sims 计算完成");
+            LogUtils.info("读取 paper sims ",CBKNNModel.class);
+            RecommenderCache.similarPaperList=(Map<String ,List<PaperSim>>) oin.readObject();
+            LogUtils.info("paper sims 计算完成",CBKNNModel.class);
             fin.close();
         } catch (Exception e){
-            e.printStackTrace();
+
+            LogUtils.error(e.getMessage(),CBKNNModel.class);
         }
     }
 
@@ -65,7 +69,7 @@ public class CBKNNModel {
     private List<PaperSim> userColdStart(){
         //针对冷启动用户
         //选择当日的论文
-        List<Paper> papers = paperDao.selectPaperOrderByTime(0,5);
+        List<Paper> papers = paperDao.selectPaperOrderByTime(0,5,10);
         List<PaperSim> res = new ArrayList<PaperSim>();
         for(Paper paper : papers){
             PaperSim sim = new PaperSim(paper.getId(),1);
@@ -80,32 +84,11 @@ public class CBKNNModel {
     }
 
     /**
-     * 获取论文的k个相似论文
-     * @param pid 论文id
-     * @param k  最相似的k个
-     * @return
-     */
-    public List<Paper> getSimPaper(String pid, int k){
-        List<Paper> res = new ArrayList<Paper>();
-        List<PaperSim> sims = new ArrayList<PaperSim>();
-        if(paperSims != null && paperSims.size()!=0){
-            sims = paperSims.get(pid);
-        }
-        for(int i=0 ;i<k;i++){
-            if(sims!=null) res.add(paperDao.selectByPrimaryKey(sims.get(i).getPid()));
-        }
-        return  res;
-    }
-
-    /**
      * 训练获得所有论文的相似论文，并持久化
      */
     private void trainSimPaper()  {
         //计算相似论文
         paper2Vec.calPaperVec();
-
-        System.out.println("开始计算 paper sims ");
-        System.out.println("papers.size : " + Paper2Vec.paperVecs.size());
 
         //URL url = CBKNNModel.class.getClassLoader().getResource(Configuration.Paper_Model_Path);
 
@@ -121,7 +104,7 @@ public class CBKNNModel {
             }
             Collections.sort(sims);
             List<PaperSim> subSims =  new ArrayList<PaperSim>(sims.subList(0,10));
-            paperSims.put(pid1,subSims);
+            RecommenderCache.similarPaperList.put(pid1,subSims);
         }
 
 
@@ -129,7 +112,7 @@ public class CBKNNModel {
             String root_path = CBKNNModel.class.getClassLoader().getResource("/").getPath();
             FileOutputStream fos = new FileOutputStream(root_path+"/"+Configuration.Paper_Model_Path);
             ObjectOutputStream os = new ObjectOutputStream(fos);
-            os.writeObject(paperSims);
+            os.writeObject(RecommenderCache.similarPaperList);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -140,7 +123,7 @@ public class CBKNNModel {
 
     }
 
-    public Map<String, List<PaperSim>> model(){
+    public void model(){
         //get the user's papers
         //1 . get all Users
         //2. get every user's papers
@@ -212,7 +195,7 @@ public class CBKNNModel {
                 users_papers.put(user.getMailbox(),sims);
             }
         }
+        RecommenderCache.userRecommend = users_papers;
 
-        return  users_papers;
     }
 }

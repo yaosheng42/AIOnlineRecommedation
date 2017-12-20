@@ -2,11 +2,14 @@ function SupportPaper(paper_id,score,author_id){
     console.dir(score);
     if(author_id=="" || author_id==undefined){
         if(confirm("请先登陆")){
-            window.location="/login/login.jsp";
+            window.location="./login/login.jsp";
         }
         $("#starScore"+score).attr("checked",false);
         return false;
     }
+
+
+
     var success = function(msg) {
         console.dir("success"+" for paper: "+paper_id);
     };

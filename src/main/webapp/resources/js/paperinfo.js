@@ -45,6 +45,7 @@ function savenotes(user_id,paper_id){
     var related_word = document.getElementById("related_word").value;
     var paper_brief_comment = document.getElementById("paper_brief_comment").value;
     var paper_model = document.getElementById("paper_model").value;
+    var paper_area = document.getElementById("paper_area").value;
     var success = function(msg) {
         console.dir("success"+" take notes for paper: "+paper_id);
         $("#author").val("");
@@ -61,7 +62,7 @@ function savenotes(user_id,paper_id){
         error : error,
         data:{"pid":paper_id,"uid":user_id,"author":author,"author_place":author_place,"paper_source":paper_source,
             "paper_keywords":paper_keywords,"problems":problems,"paper_tech":paper_tech,"paper_model":paper_model
-            ,"related_word":related_word,"paper_brief_comment":paper_brief_comment},
+            ,"related_word":related_word,"paper_brief_comment":paper_brief_comment,"paper_area":paper_area},
         dataType : "text"
     });
 }

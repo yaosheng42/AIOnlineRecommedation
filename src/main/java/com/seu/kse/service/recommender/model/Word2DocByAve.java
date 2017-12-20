@@ -28,6 +28,7 @@ public class Word2DocByAve extends Word2Doc{
 
             double [] wordVec = null;
             if(word != null ){
+
                 wordVec =vec.getWordVector(word);
             }
             if(wordVec!=null){

@@ -1,9 +1,13 @@
 package com.seu.kse.service.recommender;
 
+import com.seu.kse.service.recommender.model.PaperSim;
 import org.deeplearning4j.models.word2vec.Word2Vec;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -19,11 +23,16 @@ public class RecommenderCache {
     //word2vec model
     public static Word2Vec word2vec;
 
-
     //row id 和 用户 ID映射表
     public static List<String> userRowMapID;
 
     //row id 和 论文 ID映射表
-    public static List<String> paperRowMapID;
+    public static List<String> paperRowMapID ;
+
+    //用户推荐列表
+    public static Map<String, List<PaperSim>> userRecommend ;
+
+    //论文top10相似度列表
+    public static Map<String, List<PaperSim>> similarPaperList;
 
 }

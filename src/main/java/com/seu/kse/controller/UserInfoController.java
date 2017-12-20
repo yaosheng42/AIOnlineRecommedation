@@ -1,6 +1,7 @@
 package com.seu.kse.controller;
 
 import com.seu.kse.service.impl.*;
+import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,11 @@ public class UserInfoController {
 
     @RequestMapping(method= RequestMethod.POST,value="/submitwriterPaper",produces="text/plain;charset=UTF-8")
     public @ResponseBody String submitwriterPaper(HttpServletRequest  request){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),UserInfoController.class);
+        }
         String uid = request.getParameter("uid");
 
         String paperTitle = request.getParameter("paper_title").trim();
@@ -51,12 +58,11 @@ public class UserInfoController {
         int type = Integer.parseInt(request.getParameter("type"));
         //根据标题判断是否存在该论文
         Paper paper = paperService.getPaperByTitle(paperTitle);
-        System.out.println(paperTitle);
         if(paper == null){
             // 通过标题和url 尝试爬取该论文
             // 插入论文
             Date now = new Date();
-            paper = new Paper(paperTitle,paperTitle,"", 0, "",now , "", paper_url);
+            paper = new Paper(paperTitle,paperTitle,"", 10, "",now , paperTitle, paper_url);
             if(paperService.insertPaper(paper)<=0){
                 return "error";
             }
@@ -88,6 +94,11 @@ public class UserInfoController {
     }
     @RequestMapping(method= RequestMethod.POST,value="/addTag",produces="text/plain;charset=UTF-8")
     public @ResponseBody String addTag(HttpServletRequest  request){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),UserInfoController.class);
+        }
         String uid = request.getParameter("uid");
         String[] tagNameList = request.getParameter("tags").split(",");
         int line = 0;
@@ -119,6 +130,7 @@ public class UserInfoController {
         }
         Map<String, List<Author>> hisAuthorMap = authorService.getAuthorForPapers(hisPapers);
         Map<String, List<Author>> wriAuthorMap = authorService.getAuthorForPapers(writerPapers);
+        model.addAttribute("tag",0);
         model.addAttribute("hisPapers",hisPapers);
         model.addAttribute("writerPapers",writerPapers);
         model.addAttribute("hisAuthorMap",hisAuthorMap);
@@ -126,11 +138,17 @@ public class UserInfoController {
         return "/userinfo";
     }
 
-    @RequestMapping("/updateUser")
+    @RequestMapping(value="/updateUser",produces="text/plain;charset=UTF-8")
     public String updateUser(HttpServletRequest  request,  HttpSession session){
+        try {
+            request.setCharacterEncoding("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LogUtils.error(e.getMessage(),UserInfoController.class);
+        }
         User user = new User();
         String uid =request.getParameter("uid");
         String uname = request.getParameter("username");
+
         int utype = Integer.parseInt(request.getParameter("usertype"));
         String url = request.getParameter("userurl");
         User oldUser = userService.getUserByID(uid);

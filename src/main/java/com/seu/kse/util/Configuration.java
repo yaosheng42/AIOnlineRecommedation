@@ -12,4 +12,5 @@ public class Configuration {
     public static String stopWords="stop-word-list.txt";
     public static String paper_vec="papervec";
     public static String arxiv_path ="/home/yaosheng/data/arxiv/paperPro";
+    public static String documents = "documents";
 }

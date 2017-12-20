@@ -40,34 +40,34 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">AIOnline</a>
+            <a href="./" class="navbar-brand">AIOnline</a>
         </div>
         <div id="bs-example-navbar-collapse-1" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <c:if test="${tag == 0}">
-                    <li><a href="/todayArxiv">今日Arxiv</a></li>
-                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                    <li><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li><a href="/recommender">Arxiv 推荐</a></li>--%>
                 </c:if>
                 <c:if test="${tag == 1}">
-                    <li class="active"><a href="/todayArxiv">今日Arxiv</a></li>
-                    <li><a href="/recommender">Arxiv 推荐</a></li>
+                    <li class="active"><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li><a href="/recommender">Arxiv 推荐</a></li>--%>
                 </c:if>
 
                 <c:if test="${tag == 2}">
-                    <li><a href="/todayArxiv">今日Arxiv</a></li>
-                    <li class="active"><a href="/recommender">Arxiv 推荐</a></li>
+                    <li><a href="./todayArxiv">今日Arxiv</a></li>
+                    <%--<li class="active"><a href="/recommender">Arxiv 推荐</a></li>--%>
                 </c:if>
 
-                <li id="dropdown-tab2" class="dropdown">
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>
-                    <ul id="dropdown-panel2" role="menu" class="dropdown-menu">
-                        <li><a href="#">Conferences</a></li>
-                        <li><a href="#">Journals</a></li>
-                    </ul>
-                </li>
+                <%--<li id="dropdown-tab2" class="dropdown">--%>
+                    <%--<a data-toggle="dropdown" class="dropdown-toggle" href="#">DBLP<b id="dropdown-square2" class="caret"></b></a>--%>
+                    <%--<ul id="dropdown-panel2" role="menu" class="dropdown-menu">--%>
+                        <%--<li><a href="#">Conferences</a></li>--%>
+                        <%--<li><a href="#">Journals</a></li>--%>
+                    <%--</ul>--%>
+                <%--</li>--%>
             </ul>
-            <form id=“search” role="search" class="navbar-form navbar-left" style="width:55%" action="/search" onsubmit="return submitForm(this)" method="post">
-                <div class="form-group" style="width: 80%">
+            <form id=“search” role="search" class="navbar-form navbar-left" style="width:55%;margin-left:10%" action="./search" onsubmit="return submitForm(this)" method="post">
+                <div class="form-group" style="width: 90%">
                     <input id = "terms" name = "terms" type="text" placeholder="Search" class="form-control" style="width: 100%">
                     <input id = "tag" name = "tag" type="hidden" value="${tag}">
                 </div>
@@ -103,13 +103,13 @@
 <div class="main-content">
     <div class="content-panel">
             <article class="blog-main">
-                <h3 class="am-article-title blog-title">
-                    <a href="paperinfo?id=${paper.id}">${paper.title}</a>
+                <h3 class="am-article-title blog-title" title="下载PDF">
+                    <a href="${paper.url}">${paper.title}</a>
                 </h3>
                 <div class="paper-author">
                     <c:forEach items="${authors}" var="author" varStatus="loop">
                         <c:if test="${! empty author.aid}">
-                            <span><a href="author?id=${author.aid}"><u>${author.authorname.split(",")[0]}</u></a></span>
+                            <span><a href="${author.url}"><u>${author.authorname.split(",")[0]}</u></a></span>
                         </c:if>
                         <c:if test="${empty author.aid}">
                             <span><a href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
@@ -117,10 +117,10 @@
 
                     </c:forEach>
                     <span class="paper-time">
-                        ${paper.time.toLocaleString().split("-")[0]}-${paper.time.toLocaleString().split("-")[0]}
+                        ${paper.time.toLocaleString().split("-")[0]} ${paper.time.toLocaleString().split("-")[1]}
                     </span>
                     <%--SupportPaper(${paper.id})--%>
-                    <div id="starBg" class="star_bg">
+                    <div id="starBg" class="star_bg" style = "float:right">
                         <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
                         <a href="#starScore1" id="stara1" class="star star_1" onclick="return SupportPaper('${paper.id}',1,'${LOGIN_USER.id}')" title="差"><label for="starScore1">差</label></a>
                         <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
@@ -163,13 +163,13 @@
                         </c:if>
                     </a>
                 </li>
-                <li id="tab2" onclick="activeLi(this)">
+                <%--<li id="tab2" onclick="activeLi(this)">
                     <a href="#questionspanel">
                         <i class="icon-question-sign"></i>
                         问题
                     </a>
-                </li>
-                <li id="tab3" onclick="activeLi(this)">
+                </li>--%>
+                <li id="tab2" onclick="activeLi(this)">
                     <a href="#notespanel">
                         <i class="icon-book"></i>
                         笔记
@@ -202,7 +202,7 @@
 
                         </c:forEach>
                         <span class="paper-time">
-                                ${p.time.toLocaleString().split("-")[0]}-${p.time.toLocaleString().split("-")[1]}
+                                ${p.time.toLocaleString().split("-")[0]} ${p.time.toLocaleString().split("-")[1]}
                         </span>
                     </article>
                     <hr>
@@ -214,7 +214,7 @@
                     </ul>
                 </div>--%>
             </div>
-            <div id="panel2" class="nq-panel">
+            <%--<div id="panel2" class="nq-panel">
                 <c:forEach items="${notes}" var="n" varStatus="loop">
                     <article class="blog-main">
                     <span >
@@ -230,15 +230,80 @@
                     </article>
                     <hr>
                 </c:forEach>
-                <div class="paging-panel" >
-                    <ul>
-                        <li class="btn btn-default li-left"><a href="#">&laquo; 上一页</a></li>
-                        <li class="btn btn-default li-right"><a href="#">下一页 &raquo;</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div  id="panel3" class="nq-panel">
-               暂无相关笔记
+            </div>--%>
+            <div  id="panel2" class="nq-panel">
+                <c:choose>
+                    <c:when test="${note!=null}">
+                        <form  class="form-horizontal" method="post">
+                            <input name="paper_id" style="display: none" value="${paper.id}"/>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">作者</label>
+                                <div class="col-lg-10">
+                                    <input readonly="readonly" id="author_show" type="text" value="${note.author}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">作者单位</label>
+                                <div class="col-lg-10">
+                                    <input readonly="readonly" id="author_place_show" type="text" value="${note.authorPlace}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">文章来源</label>
+                                <div class="col-lg-10">
+                                    <input readonly="readonly" id="paper_source_show" type="text" value="${note.paperSource}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">关键词</label>
+                                <div class="col-lg-10">
+                                    <input readonly="readonly" id="paper_keywords_show" type="text" value="${note.keywords}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">论文问题</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly" id="problem_show" type="text" placeholder="${note.paperProblem}" class="form-control">${note.paperProblem}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">论文采用技术</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly" id="paper_tech_show" type="text" placeholder="${note.tags}" class="form-control">${note.tags}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">论文研究方向</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly"id="paper_area_show" type="text" placeholder="${note.paperDirection}" class="form-control">${note.paperDirection}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">论文模型</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly" readonly="readonly" rows="5" id="paper_model_show" type="url" placeholder="${note.paperModel}" class="form-control">${note.paperModel}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">相关工作</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly" rows="5" id="related_word_show" type="url" placeholder="${note.paperRelatedwork}" class="form-control">${note.paperRelatedwork}</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">论文简评</label>
+                                <div class="col-lg-10">
+                                    <textarea readonly="readonly" rows="5" id="paper_brief_comment_show" type="url" placeholder="${note.paperReview}" class="form-control">${note.paperReview}</textarea>
+                                </div>
+                            </div>
+
+                        </form>
+
+                    </c:when>
+                    <c:otherwise>
+                        暂无笔记
+                    </c:otherwise>
+                </c:choose>
             </div>
             <div  id="panel4" class="nq-panel">
                 <form  class="form-horizontal" method="post">
@@ -304,7 +369,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn-save btn btn-sm btn-primary" ONCLICK="savenotes('${LOGIN_USER.id}','${paper.id}')">提交报告</button>
+                        <button style="float: right" type="submit" class="btn-save btn btn-sm btn-primary" ONCLICK="savenotes('${LOGIN_USER.id}','${paper.id}')">提交报告</button>
                     </div>
                 </form>
             </div>
@@ -313,16 +378,16 @@
 
 </div>
 <div id="papernotes" class="note-question-panel">
-    <div id="takenotesbutton">
-        <%--<a class="btn btn-default" onclick="takeactions('takenotesform')">
+   <%-- <div id="takenotesbutton">
+        &lt;%&ndash;<a class="btn btn-default" onclick="takeactions('takenotesform')">
             <i class="icon-question-sign"></i>
             做笔记
-        </a>--%>
+        </a>&ndash;%&gt;
         <a class="btn btn-default" onclick="takeactions('askquestionsform')">
             <i class="icon-pencil"></i>
             提问题
         </a>
-    </div>
+    </div>--%>
     <div id="takenotesform" class="panel panel-default" style="display: none;margin: 5px 5px 0 5px;">
         <div class="panel-nq panel-heading">
             <label>标题：</label>
@@ -336,7 +401,7 @@
             <a class="btn-cancel btn btn-default" onclick="cancelactions('takenotesform')">取消</a>
         </div>
     </div>
-    <div id="askquestionsform"  class="panel panel-default" style="display: none;margin: 5px 5px 0 5px;">
+    <%--<div id="askquestionsform"  class="panel panel-default" style="display: none;margin: 5px 5px 0 5px;">
         <div class="panel-nq panel-heading">
             <label>标题：</label>
             <input id="questiontitle" type="text">
@@ -348,7 +413,7 @@
             <a class="btn-save btn btn-primary" onclick="savequestions('${paper.id}')">保存问题</a>
             <a class="btn-cancel btn btn-default" onclick="cancelactions('askquestionsform')">取消</a>
         </div>
-    </div>
+    </div>--%>
 
 </div>
 <footer class="footer">

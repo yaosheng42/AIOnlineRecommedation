@@ -10,13 +10,13 @@ import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.email.EmailSender;
 import com.seu.kse.service.recommender.CB.CBKNNModel;
 import com.seu.kse.service.recommender.CB.PaperDocument;
+import com.seu.kse.service.recommender.RecommenderCache;
 import com.seu.kse.util.Configuration;
 import com.seu.kse.service.recommender.model.Paper2Vec;
 import com.seu.kse.service.recommender.model.PaperSim;
 import com.seu.kse.util.Constant;
 import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class RecommendationService {
     private static CBKNNModel cmodel;
     private static Paper2Vec paper2Vec;
     private EmailSender emailSender;
-    private static Map<String, List<PaperSim>> res= new HashMap<String, List<PaperSim>>();
+
 
     private final PaperMapper paperDao;
     private final UserMapper userDao;
@@ -83,7 +82,7 @@ public class RecommendationService {
 
             emailSender = new EmailSender(Constant.sender,Constant.emailhost);
             emailSender.init();
-            System.out.println("init complete!");
+
             LogUtils.info("init complete",RecommendationService.class);
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
@@ -109,9 +108,7 @@ public class RecommendationService {
         paper2Vec.modelByWord2vce(); //服務器內存溢出，如何解決
         paper2Vec.calPaperVec();
         cmodel = new CBKNNModel(paper2Vec,true);
-
-
-        res = cmodel.model();
+        cmodel.model();
         LogUtils.info("model update complete !",RecommendationService.class);
     }
 
@@ -120,22 +117,22 @@ public class RecommendationService {
         if(!Utils.testConnect()){
             return;
         }
-        res = cmodel.model();
+        cmodel.model();
         Byte yes =1;
         Byte no = 0;
-        for(Map.Entry<String,List<PaperSim>> e : res.entrySet()){
+        for(Map.Entry<String,List<PaperSim>> e : RecommenderCache.userRecommend.entrySet()){
             String email = e.getKey();
             User user = userDao.selectByEmail(email);
             List<PaperSim> val = e.getValue();
             List<String> paperURLs = new ArrayList<String>();
-            List<String> paperTitls = new ArrayList<String>();
+            List<String> paperTitles = new ArrayList<String>();
             for(int i=0;i<k;i++){
                 String paperID = val.get(i).getPid();
                 Paper paper = paperDao.selectByPrimaryKey(paperID);
                 String paperTitle = paper.getTitle();
                 String paperURL = Constant.paperinfoURL + paperID;
                 paperURLs.add(paperURL);
-                paperTitls.add(paperTitle);
+                paperTitles.add(paperTitle);
                 //更新user_paper 表
                 UserPaperBehavior upb = new UserPaperBehavior();
                 upb.setUid(user.getId());
@@ -145,7 +142,7 @@ public class RecommendationService {
                 upb.setAuthor(no);
                 updateUserPaperB(upb);
             }
-            recommendByEmail(email, paperURLs,paperTitls);
+            recommendByEmail(email, paperURLs,paperTitles);
         }
         LogUtils.info("recommend end !",RecommendationService.class);
     }
@@ -172,6 +169,9 @@ public class RecommendationService {
         }
         emailSender.send(email,content);
     }
+
+
+
 
 //    @Test
 //    public void run(){

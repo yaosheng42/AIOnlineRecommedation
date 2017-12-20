@@ -1,6 +1,8 @@
 package com.seu.kse.controller;
 
+import com.seu.kse.service.impl.UserPaperService;
 import com.seu.kse.util.Constant;
+import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
 import com.seu.kse.dao.UserAuthorFocusMapper;
@@ -9,8 +11,7 @@ import com.seu.kse.dao.UserPaperBehaviorMapper;
 
 import com.seu.kse.service.impl.AuthorService;
 import com.seu.kse.service.impl.PaperService;
-import org.bytedeco.javacpp.annotation.Const;
-import org.bytedeco.javacpp.presets.opencv_core;
+import it.unimi.dsi.fastutil.ints.Int2IntSortedMaps;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.TransportClient;
@@ -57,6 +58,9 @@ public class IndexController {
     @Resource
     private UserAuthorFocusMapper userAuthorFocusDao;
 
+    @Resource
+    private UserPaperService userPaperService;
+
 //    @Resource
 //    private UserPaperNoteMapper userPaperNoteDao;
     private int limit = 20;
@@ -74,7 +78,7 @@ public class IndexController {
         /*if(!Utils.testConnect()){
             return "/index";
         }*/
-        Utils.testLogin(session,model);
+        User login = Utils.testLogin(session,model);
         int pageNum=0;
         if(request.getParameter("pageNum")!=null) {
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
@@ -85,6 +89,10 @@ public class IndexController {
         model.addAttribute("nextPage",pageNum+1);
         //获得作者
         Map<String, List<Author>> authorMap = authorService.getAuthorForPapers(papers);
+        //获取收藏信息 默认得分为5
+        Map<String,Boolean> startedMap = userPaperService.getUserPaperStarted(papers,login);
+
+        model.addAttribute("startedMap",startedMap);
         model.addAttribute("authorMap",authorMap);
         model.addAttribute("limit",limit);
         model.addAttribute("paper_num",papers.size());
@@ -95,7 +103,7 @@ public class IndexController {
 
     @Transactional
     @RequestMapping(value="/search",produces="text/plain;charset=UTF-8")
-    public  String search(HttpServletRequest request, Model model){
+    public  String search(HttpServletRequest request, HttpSession session, Model model){
         String terms = request.getParameter("terms");
         String tag = request.getParameter("tag");
         int pageNum=0;
@@ -115,7 +123,7 @@ public class IndexController {
                 .setTypes(Constant.ES_TYPE)
                 .setSearchType(SearchType.QUERY_THEN_FETCH)
                 .setQuery(multiMatchQueryBuilder)
-                .setExplain(true).get();
+                .setExplain(true).setFrom(pageNum*limit).setSize(limit).get();
 
         SearchHits hits = search_response.getHits();
         List<Paper> papers = new ArrayList<Paper>();
@@ -136,6 +144,10 @@ public class IndexController {
             paper.setType((Integer) res.get(Constant.ES_FIELD_TYPE));
             papers.add(paper);
         }
+        //获取收藏信息 默认得分为5
+        User login = Utils.testLogin(session,model);
+        Map<String,Boolean> startedMap = userPaperService.getUserPaperStarted(papers,login);
+        model.addAttribute("startedMap",startedMap);
         model.addAttribute("papers",papers);
         model.addAttribute("previousPage",pageNum>0?(pageNum-1):pageNum);
         model.addAttribute("nextPage",pageNum+1);
@@ -145,6 +157,13 @@ public class IndexController {
         model.addAttribute("limit",limit);
         model.addAttribute("paper_num",papers.size());
         model.addAttribute("tag",0);
+        model.addAttribute("terms",terms);
+        if(login!=null){
+            LogUtils.info(login.getId()+" "+terms,IndexController.class);
+        }else{
+            LogUtils.info("visitor"+" "+terms,IndexController.class);
+
+        }
         return "/index";
     }
 
@@ -155,7 +174,7 @@ public class IndexController {
         if(request.getParameter("pageNum")!=null) {
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
         }
-        List<Paper> papers = paperService.getTodayArxivPapers(pageNum,limit);
+        List<Paper> papers = paperService.getTodayArxivPapers(pageNum*limit,limit);
         model.addAttribute("papers",papers);
         model.addAttribute("previousPage",pageNum>0?(pageNum-1):pageNum);
         model.addAttribute("nextPage",pageNum+1);
@@ -165,13 +184,13 @@ public class IndexController {
         model.addAttribute("limit",limit);
         model.addAttribute("paper_num",papers.size());
         model.addAttribute("tag",1);
-        System.out.println(papers.size());
+        //System.out.println(papers.size());
         return "/index";
     }
 
     @RequestMapping(method= RequestMethod.GET,value="/recommender",produces="text/plain;charset=UTF-8")
-    public  String recommender(HttpServletRequest request,Model model){
-        String uid = request.getParameter("uid");
+    public  String recommender(HttpServletRequest request,HttpSession session, Model model){
+
         model.addAttribute("tag",2);
         return "/index";
     }
@@ -269,7 +288,6 @@ public class IndexController {
         model.addAttribute("papers",papers);
         return "/index";
     }
-
 
 
 }

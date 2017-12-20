@@ -38,7 +38,9 @@ public class AuthorService {
                 authors.add(author);
             }
         }
-
+        if(authors.size()>3){
+            authors = authors.subList(0,3);
+        }
         return authors;
     }
 
@@ -57,7 +59,11 @@ public class AuthorService {
             paper.setId(paperId);
 
             if(authorsOfpaper!=null && authorsOfpaper.size()!=0){
-                authorMap.put(paper.getId(),authorsOfpaper);
+                if(authorsOfpaper.size()>3){
+                    authorMap.put(paper.getId(),authorsOfpaper.subList(0,3));
+                }else{
+                    authorMap.put(paper.getId(),authorsOfpaper);
+                }
             }else{
                 //为了保证一一对齐，没有作者的填充为未知
                 Author author = new Author();

@@ -6,7 +6,7 @@ function addTag(uid){
 
     if(uid==undefined){
         if(confirm("请先登陆")){
-            window.location="/login/login.jsp";
+            window.location="./login/login.jsp";
         }
         return false;
     }
