@@ -36,12 +36,7 @@ public class PaperSim implements Comparable<PaperSim>, Serializable {
     }
 
     public int compareTo(PaperSim o) {
-        return isEqual(this, o) ? 0 : this.getSim() > o.getSim() ? 1 : -1;
+        return Double.compare(o.sim,this.sim);
     }
-    private boolean isEqual(PaperSim o1, PaperSim o2){
-        if(Math.abs(o1.getSim() - o2.getSim()) < 0.00001){
-            return true;
-        }
-        return false;
-    }
+
 }

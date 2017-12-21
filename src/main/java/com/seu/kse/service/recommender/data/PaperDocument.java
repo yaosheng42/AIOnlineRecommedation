@@ -1,4 +1,4 @@
-package com.seu.kse.service.recommender.CB;
+package com.seu.kse.service.recommender.data;
 
 import com.seu.kse.bean.Paper;
 import com.seu.kse.dao.PaperMapper;
@@ -19,13 +19,10 @@ import java.util.List;
 
 public class PaperDocument {
 
-    ApplicationContext ac = new ClassPathXmlApplicationContext("classpath:spring-mybatis.xml");
-    PaperMapper paperDao ;
 
-    public void ToDocument(String filePath){
+
+    public static void ToDocument(String filePath,List<Paper> papers){
         //加载所有论文
-        paperDao = (PaperMapper) ac.getBean("paperMapper");
-        List<Paper> papers = paperDao.selectAllPaper();
         //将论文的标题和摘要当作句子输出文本
         BufferedWriter bufferedWriter = null;
         try {
@@ -38,9 +35,7 @@ public class PaperDocument {
             for(Paper paper : papers){
                 String title = paper.getTitle();
                 String paper_abstract = paper.getPaperAbstract();
-
-                bufferedWriter.write(title);
-                bufferedWriter.newLine();
+                bufferedWriter.write(title+".");
                 bufferedWriter.write(paper_abstract);
                 bufferedWriter.newLine();
             }

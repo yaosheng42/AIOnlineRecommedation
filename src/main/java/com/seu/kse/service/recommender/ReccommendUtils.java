@@ -7,11 +7,14 @@ package com.seu.kse.service.recommender;
 
 
 
+import com.seu.kse.service.recommender.model.PaperSim;
 import com.seu.kse.util.Configuration;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yaosheng on 2017/5/25.
@@ -101,7 +104,22 @@ public class ReccommendUtils {
         return delWords;
     }
 
-
+    public static void generateSimilarPaperList(){
+        for(Map.Entry<String, double[]> e1 : RecommenderCache.paperVecs.entrySet()){
+            List<PaperSim> sims = new ArrayList<PaperSim>();
+            String pid1 = e1.getKey();
+            for(Map.Entry<String, double[]> e2 : RecommenderCache.paperVecs.entrySet()){
+                if(e1==e2) continue;
+                String pid2 = e2.getKey();
+                double sim = ReccommendUtils.cosinSimilarity(e1.getValue(),e2.getValue());
+                PaperSim paperSim = new PaperSim(pid2, sim);
+                sims.add(paperSim);
+            }
+            Collections.sort(sims);
+            List<PaperSim> subSims =  new ArrayList<PaperSim>(sims.subList(0,20));
+            RecommenderCache.similarPaperList.put(pid1,subSims);
+        }
+    }
 
     /*
     public static List<String> extractKeys(String content){

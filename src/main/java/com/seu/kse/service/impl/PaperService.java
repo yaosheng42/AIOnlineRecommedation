@@ -119,9 +119,19 @@ public class PaperService {
         if(RecommenderCache.similarPaperList != null && RecommenderCache.similarPaperList.size()!=0){
             sims = RecommenderCache.similarPaperList.get(pid);
         }
-        for(int i=0 ;i<k;i++){
-            if(sims!=null) res.add(paperdao.selectByPrimaryKey(sims.get(i).getPid()));
+        if(sims!=null&&sims.size()!=0){
+            int minSize = Math.min(k,sims.size());
+            for(int i=0 ;i<minSize;i++){
+                res.add(paperdao.selectByPrimaryKey(sims.get(i).getPid()));
+            }
         }
         return  res;
     }
+
+    public List<Paper> getSimPaperByMatrix(String pid, int k){
+        List<Paper> res = new ArrayList<Paper>();
+        
+        return  res;
+    }
+
 }

@@ -17,8 +17,8 @@ public class RecommenderCache {
     //论文相似度矩阵
     public static INDArray paperSimilarityMatrix ;
 
-    //论文向量矩阵 row : paper's num ; col : dimension
-    public static INDArray paperVectorMatrix;
+    //论文PID 映射
+    public static Map<String, Integer> paperIDMapRowID;
 
     //word2vec model
     public static Word2Vec word2vec;
@@ -34,5 +34,8 @@ public class RecommenderCache {
 
     //论文top10相似度列表
     public static Map<String, List<PaperSim>> similarPaperList;
+
+    //paper vec
+    public static Map<String, double[]> paperVecs = new HashMap<String, double[]>();
 
 }
