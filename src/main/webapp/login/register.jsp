@@ -50,7 +50,7 @@ charset=UTF-8"
           </div>
             <div class="form-group">
                 <label>用户名</label>
-                <input id="name" name="name" type="name" placeholder="Enter User Name" class="form-control">
+                <input id="name" name="name" type="text" placeholder="Enter User Name" class="form-control">
             </div>
           <div class="form-group">
             <label>密码</label>
@@ -59,6 +59,10 @@ charset=UTF-8"
             <div class="form-group">
                 <label>再次输入密码</label>
                 <input id="repeatpassword" name="password" type="password" placeholder="Password" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>推送数量</label>
+                <input id="pushnum" name="pushnum" type="text" placeholder="5" class="form-control" value="5">
             </div>
             <div class="form-group">
                 <label>用户身份</label>

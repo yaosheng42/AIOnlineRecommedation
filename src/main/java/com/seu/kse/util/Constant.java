@@ -22,4 +22,5 @@ public class Constant {
     public static String ES_FIELD_PUBLISHER = "publisher";
     public static String[] ES_FIELDS ={ES_FIELD_ABSTRACT,ES_FIELD_TITLE,ES_FIELD_AUTHOR,ES_FIELD_ID,
             ES_FIELD_KEYWORDS,ES_FIELD_TIME,ES_FIELD_URL,ES_FIELD_TYPE,ES_FIELD_PUBLISHER};
+    public static boolean isTest = true;
 }

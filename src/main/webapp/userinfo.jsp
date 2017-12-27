@@ -153,6 +153,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="col-sm-2 control-label">推送数量</label>
+                        <div class="col-lg-10">
+                            <input name="userpushnum" type="text" value="${LOGIN_USER.pushNum}" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <button style="float:right" type="submit" class="btn-save btn btn-sm btn-primary">修改个人信息</button>
                     </div>
                 </form>

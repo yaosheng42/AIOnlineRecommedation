@@ -8,9 +8,10 @@
     <result column="mailbox" property="mailbox" jdbcType="VARCHAR" />
     <result column="utype" property="utype" jdbcType="INTEGER" />
     <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="pushnum" property="pushnum" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, uname, upassword, mailbox, utype, url
+    id, uname, upassword, mailbox, utype, url, pushnum
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
     select 
@@ -50,9 +51,9 @@
   </delete>
   <insert id="insert" parameterType="com.seu.kse.bean.User" >
     insert into user (id, uname, upassword, 
-      mailbox, utype,url)
+      mailbox, utype,url ,pushnum)
     values (#{id,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, 
-      #{mailbox,jdbcType=VARCHAR}, #{utype,jdbcType=INTEGER},#{url,jdbcType=VARCHAR})
+      #{mailbox,jdbcType=VARCHAR}, #{utype,jdbcType=INTEGER},#{url,jdbcType=VARCHAR},#{pushnum,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.seu.kse.bean.User" >
     insert into user
@@ -75,6 +76,9 @@
       <if test="url != null" >
         url,
       </if>
+      <if test="pushnum != null" >
+        pushnum,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -94,6 +98,9 @@
       </if>
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="pushnum != null" >
+        #{pushnum,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -115,6 +122,9 @@
       <if test="url != null" >
         url = #{url,jdbcType=VARCHAR},
       </if>
+      <if test="pushnum != null" >
+        pushnum = #{pushnum,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -124,7 +134,8 @@
       upassword = #{upassword,jdbcType=VARCHAR},
       mailbox = #{mailbox,jdbcType=VARCHAR},
       utype = #{utype,jdbcType=INTEGER},
-      url = #{url,jdbcType=VARCHAR}
+      url = #{url,jdbcType=VARCHAR},
+      pushnum = #{pushnum,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

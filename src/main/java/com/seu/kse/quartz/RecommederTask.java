@@ -29,6 +29,7 @@ public class RecommederTask {
     private final UserMapper userDao;
     private final UserPaperBehaviorMapper userPaperBehaviorDao;
 
+
     @Autowired
     public RecommederTask(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao){
         this.paperDao = paperDao;
@@ -46,24 +47,29 @@ public class RecommederTask {
         LogUtils.info("开始推荐......",RecommederTask.class);
 
 
-        recommend(5);
+        recommend();
 
         LogUtils.info("结束推荐......",RecommederTask.class);
 
     }
-    public void recommend(int k){
+    public void recommend(){
         LogUtils.info("recommend start !",RecommendationService.class);
-
-
         Byte yes =1;
         Byte no = 0;
         for(Map.Entry<String,List<PaperSim>> e : RecommenderCache.userRecommend.entrySet()){
             String email = e.getKey();
             User user = userDao.selectByEmail(email);
+
+            if(Constant.isTest){
+                if(!(user.getUname() == "yaosheng")){
+                    continue;
+                }
+            }
             List<PaperSim> val = e.getValue();
             List<String> paperURLs = new ArrayList<String>();
             List<String> paperTitles = new ArrayList<String>();
-            for(int i=0;i<k;i++){
+            int pushNum = user.getPushNum();
+            for(int i=0;i<pushNum;i++){
                 String paperID = val.get(i).getPid();
                 Paper paper = paperDao.selectByPrimaryKey(paperID);
                 String paperTitle = paper.getTitle();

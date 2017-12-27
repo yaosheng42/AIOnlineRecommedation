@@ -148,9 +148,9 @@ public class UserInfoController {
         User user = new User();
         String uid =request.getParameter("uid");
         String uname = request.getParameter("username");
-
         int utype = Integer.parseInt(request.getParameter("usertype"));
         String url = request.getParameter("userurl");
+        int pushNum = Integer.parseInt(request.getParameter("userpushnum"));
         User oldUser = userService.getUserByID(uid);
         if(oldUser!=null){
             user.setUname(uname);
@@ -159,6 +159,7 @@ public class UserInfoController {
             user.setId(uid);
             user.setMailbox(oldUser.getMailbox());
             user.setUpassword(oldUser.getUpassword());
+            user.setPushNum(pushNum);
             int line = userService.updateUser(user);
             if(line>0){
                //更新Session
