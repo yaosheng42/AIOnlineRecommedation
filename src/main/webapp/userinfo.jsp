@@ -155,7 +155,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">推送数量</label>
                         <div class="col-lg-10">
-                            <input name="userpushnum" type="text" value="${LOGIN_USER.pushNum}" class="form-control">
+                            <input name="userpushnum" type="text" value="${LOGIN_USER.pushnum}" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">

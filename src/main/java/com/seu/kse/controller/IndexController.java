@@ -105,7 +105,10 @@ public class IndexController {
     @RequestMapping(value="/search",produces="text/plain;charset=UTF-8")
     public  String search(HttpServletRequest request, HttpSession session, Model model){
         String terms = request.getParameter("terms");
-        String tag = request.getParameter("tag");
+        if(terms == null || terms.trim().length() == 0){
+            return "/index";
+        }
+
         int pageNum=0;
         if(request.getParameter("pageNum")!=null) {
             pageNum = Integer.parseInt(request.getParameter("pageNum"));
@@ -159,9 +162,9 @@ public class IndexController {
         model.addAttribute("tag",0);
         model.addAttribute("terms",terms);
         if(login!=null){
-            LogUtils.info(login.getId()+" "+terms,IndexController.class);
+            LogUtils.info("search : "+login.getId()+" "+terms,IndexController.class);
         }else{
-            LogUtils.info("visitor"+" "+terms,IndexController.class);
+            LogUtils.info("search : visitor"+" "+terms,IndexController.class);
 
         }
         return "/index";

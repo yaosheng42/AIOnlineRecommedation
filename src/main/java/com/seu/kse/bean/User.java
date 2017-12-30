@@ -6,13 +6,13 @@ import com.seu.kse.util.MD5Utils;
 public class User {
 
 
-    public User(String uname,String upassword,String mailbox,int utype,int pushNum){
+    public User(String uname,String upassword,String mailbox,int utype,int pushnum){
 
         this.uname=uname;
         this.upassword=upassword;
         this.mailbox=mailbox;
         this.utype=utype;
-        this.pushNum = pushNum;
+        this.pushnum = pushnum;
         // 生成id
         this.id= MD5Utils.MD5Encode(mailbox,"utf-8",false);
     }
@@ -33,14 +33,14 @@ public class User {
 
     private String url;
 
-    private Integer pushNum;
+    private Integer pushnum;
 
-    public Integer getPushNum() {
-        return pushNum;
+    public Integer getPushnum() {
+        return pushnum;
     }
 
-    public void setPushNum(Integer pushNum) {
-        this.pushNum = pushNum;
+    public void setPushnum(Integer pushnum) {
+        this.pushnum = pushnum;
     }
 
     public String getUrl() {

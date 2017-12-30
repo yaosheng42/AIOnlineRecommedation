@@ -159,7 +159,7 @@ public class UserInfoController {
             user.setId(uid);
             user.setMailbox(oldUser.getMailbox());
             user.setUpassword(oldUser.getUpassword());
-            user.setPushNum(pushNum);
+            user.setPushnum(pushNum);
             int line = userService.updateUser(user);
             if(line>0){
                //更新Session

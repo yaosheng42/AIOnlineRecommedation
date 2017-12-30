@@ -68,7 +68,7 @@ public class RecommederTask {
             List<PaperSim> val = e.getValue();
             List<String> paperURLs = new ArrayList<String>();
             List<String> paperTitles = new ArrayList<String>();
-            int pushNum = user.getPushNum();
+            int pushNum = user.getPushnum();
             for(int i=0;i<pushNum;i++){
                 String paperID = val.get(i).getPid();
                 Paper paper = paperDao.selectByPrimaryKey(paperID);
