@@ -1,3 +1,4 @@
+<%@ page import="java.net.URLEncoder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -11,6 +12,19 @@
     String basePath = request.getScheme() + "://"
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
+    //获得当前url
+    String url_str = new String(request.getRequestURL());
+
+    String[] temp = url_str.split(".jsp");
+    url_str = temp[0];
+
+
+    //判断当前url是否有参数
+    if(request.getQueryString()!=null && !"".equals(request.getQueryString())){
+        url_str = url_str.concat("?" + request.getQueryString());
+    }
+    String url = URLEncoder.encode(url_str);
+
 %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -97,7 +111,7 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="login/login.jsp">登录</a></li>
+                        <li><a href="login/login.jsp?next=<%=url%>">登录</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>

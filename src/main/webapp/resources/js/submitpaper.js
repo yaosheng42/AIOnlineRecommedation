@@ -48,7 +48,7 @@ function save_interest_paper(uid, type){
         }
         return false;
     }
-    var paper_title = document.getElementById("paper_titl1").value;
+    var paper_title = document.getElementById("paper_title1").value;
     var paper_url = document.getElementById("paper_url1").value;
 
     console.dir(paper_title);

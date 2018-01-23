@@ -100,6 +100,14 @@
     ORDER BY time DESC LIMIT #{arg0}, #{arg1}
   </select>
 
+  <select id="selectTodayPaper" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from paper  WHERE time >= #{arg0}
+  </select>
+
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
     delete from paper

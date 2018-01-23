@@ -82,4 +82,12 @@ public class UserPaperService {
 
         return res;
     }
+
+    public UserPaperBehavior selectByKey(UserPaperBehaviorKey key){
+        return userPaperBehaviorDao.selectByPrimaryKey(key);
+    }
+
+    public void updateByPrimaryKey(UserPaperBehavior ub){
+        userPaperBehaviorDao.updateByPrimaryKey(ub);
+    }
 }

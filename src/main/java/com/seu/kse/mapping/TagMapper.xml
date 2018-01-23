@@ -3,14 +3,15 @@
 <mapper namespace="com.seu.kse.dao.TagMapper">
   <resultMap id="BaseResultMap" type="com.seu.kse.bean.Tag">
     <id column="tagName" jdbcType="VARCHAR" property="tagname" />
+    <id column="time" jdbcType="DATE" property="time" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from tag
     where tagName = #{tagname,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.seu.kse.bean.Tag">
-    insert into tag (tagName)
-    values (#{tagname,jdbcType=VARCHAR})
+    insert into tag (tagName,time)
+    values (#{tagname,jdbcType=VARCHAR},#{time,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.seu.kse.bean.Tag">
     insert into tag
@@ -18,10 +19,16 @@
       <if test="tagname != null">
         tagName,
       </if>
+      <if test="time != null">
+        time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="tagname != null">
         #{tagname,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=DATE},
       </if>
     </trim>
   </insert>
@@ -34,5 +41,18 @@
     tag where tagName = #{tagname, jdbcType=VARCHAR}
   </select>
 
+  <select id="selectAllTag" resultMap="BaseResultMap">
+    select
+    *
+    FROM
+    tag
+  </select>
 
+  <select id="selectTodayTag" resultMap="BaseResultMap">
+    select
+    *
+    FROM
+    tag
+    time >= #{arg0}
+  </select>
 </mapper>

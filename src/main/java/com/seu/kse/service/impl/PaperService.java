@@ -1,17 +1,16 @@
 package com.seu.kse.service.impl;
 
 import com.seu.kse.bean.Paper;
+import com.seu.kse.bean.PaperSims;
 import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.service.recommender.RecommenderCache;
 import com.seu.kse.service.recommender.model.PaperSim;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by yaosheng on 2017/5/24.
@@ -128,9 +127,33 @@ public class PaperService {
         return  res;
     }
 
+    //使用 优先队列取 top k
     public List<Paper> getSimPaperByMatrix(String pid, int k){
         List<Paper> res = new ArrayList<Paper>();
-        
+        if(RecommenderCache.paperIDMapRowID.get(pid)==null){
+            return res;
+        }
+        int index = RecommenderCache.paperIDMapRowID.get(pid);
+        INDArray rowsVec = RecommenderCache.paperSimilarityMatrix.getRow(index);
+        Queue<PaperSim> maxKPaper = new PriorityQueue<PaperSim>(k);
+        for(int i=0; i<rowsVec.length(); i++){
+            String simPID = RecommenderCache.rowIDMappaperID.get(i);
+            if(pid.equals(simPID)) break;
+            PaperSim paperSim = new PaperSim(RecommenderCache.rowIDMappaperID.get(i),rowsVec.getDouble(i));
+            if(maxKPaper.size()<k){
+                maxKPaper.add(paperSim);
+            }else{
+                PaperSim lowest = maxKPaper.peek();
+                if(paperSim.compareTo(lowest)>0){
+                    maxKPaper.poll();
+                    maxKPaper.add(paperSim);
+                }
+            }
+        }
+        for(PaperSim p : maxKPaper){
+            res.add(paperdao.selectByPrimaryKey(p.getPid()));
+        }
+        Collections.reverse(res);
         return  res;
     }
 

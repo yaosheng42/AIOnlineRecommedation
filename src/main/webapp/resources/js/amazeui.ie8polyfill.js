@@ -491,7 +491,7 @@ defineProperties(ArrayPrototype, {
 
         // If no callback function or if callback is not a callable function
         if (!isCallable(callbackfn)) {
-            throw new TypeError('Array.prototype.filter callback must be a function');
+            throw new TypeError('Array.prototype.interceptor callback must be a function');
         }
 
         for (var i = 0; i < length; i++) {
@@ -1371,7 +1371,7 @@ if (!dateToJSONIsSupported) {
         // require that its this value be a Date object. Therefore, it can be
         // transferred to other kinds of objects for use as a method. However,
         // it does require that any such object have a toISOString method. An
-        // object is free to use the argument key to filter its
+        // object is free to use the argument key to interceptor its
         // stringification.
     };
 }
@@ -2666,7 +2666,7 @@ if (!Object.isExtensible) {
       return (/rem/).test(div.style.fontSize);
     },
 
-  // filter returned links for stylesheets
+  // interceptor returned links for stylesheets
     isStyleSheet = function () {
       var styles = document.getElementsByTagName('link'),
         filteredLinks = [];

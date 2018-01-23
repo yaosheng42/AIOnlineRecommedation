@@ -13,9 +13,11 @@ function addTag(uid){
     var tags = document.getElementById("tags").value;
     console.dir(tags);
     var success = function(msg) {
+        alert("上传成功");
         console.dir("success"+" for paper: "+uid);
     };
     var error = function(msg){
+        alert("上传失败");
         console.dir("error"+" for paper: "+uid);
     };
     $.ajax({

@@ -103,6 +103,7 @@ public class UserInfoController {
         String[] tagNameList = request.getParameter("tags").split(",");
         int line = 0;
         for(String tagName : tagNameList){
+
             UserTagKey userAndTag = new UserTagKey(uid, tagName.trim());
             line = userTagService.insertUserAndTag(userAndTag);
         }

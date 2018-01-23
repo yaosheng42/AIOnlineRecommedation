@@ -54,7 +54,7 @@ public class DataInjectService {
     }
     public  void dataInject(){
         try{
-            //dataInject_init();
+
             Date now = new Date();
             SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd");
             String date = sf.format(now);
@@ -88,7 +88,7 @@ public class DataInjectService {
 
         Calendar c = Calendar.getInstance();
         Date now = c.getTime();
-        c.set(2017,Calendar.NOVEMBER,10);
+        c.set(2018,Calendar.JANUARY,17);
 
         Date cur =  c.getTime();
 

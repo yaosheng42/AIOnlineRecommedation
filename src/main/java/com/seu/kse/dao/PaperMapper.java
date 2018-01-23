@@ -24,6 +24,8 @@ public interface PaperMapper {
 
     List<Paper> selectTodayArxiv(int pageNum, int limit,int time,int type);
 
+    List<Paper> selectTodayPaper(int time);
+
     List<Paper> selectAllPaper();
 
     Paper selectByTitle(String title);

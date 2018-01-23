@@ -1,17 +1,22 @@
 package com.seu.kse.controller;
 
+import com.seu.kse.bean.UserTagKey;
+import com.seu.kse.service.impl.UserTagService;
 import com.seu.kse.util.Constant;
 import com.seu.kse.bean.User;
 import com.seu.kse.service.IUserService;
 import com.seu.kse.service.impl.UserFieldService;
 import com.seu.kse.bean.userFieldsKey;
 import com.seu.kse.util.LogUtils;
+import org.bytedeco.javacpp.presets.opencv_core;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.UnsupportedEncodingException;
@@ -28,9 +33,11 @@ public class loginController {
     private IUserService userService;
     @Resource
     private UserFieldService utService;
+    @Resource
+    private UserTagService utagService;
 
     @RequestMapping("/login")
-    public String login(HttpServletRequest request,HttpSession session, Model model){
+    public String login(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model){
         try {
             request.setCharacterEncoding("UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -45,9 +52,17 @@ public class loginController {
                 model.addAttribute("result","用户输入信息错误");
                 return "/login/login";
             }
+            Cookie userIDCookie = new Cookie(Constant.COOKIE_USER_ID,user.getId());
+            Cookie userPSWCookie = new Cookie(Constant.COOKIE_USER_PSW,user.getUpassword());
+            response.addCookie(userIDCookie);
+            response.addCookie(userPSWCookie);
             session.setAttribute(Constant.CURRENT_USER,user);
         }
-        return "redirect:/";
+        // 获取原网址
+        String next = request.getParameter("next");
+
+        if(next == null) next = "/";
+        return "redirect:".concat(next);
     }
 
     @RequestMapping("/logout")
@@ -82,13 +97,20 @@ public class loginController {
             }
             model.addAttribute("id",user.getId());
             String[] area_ids = {"00010","00020","00030","00040","00050","00060","00070","00080","00090","00100","00110","00120"};
-            for(String area_id:area_ids){
-                String userfield = request.getParameter(area_id);
+            String[] EnglishName = {"Artificial Intelligence","Computer graphics","Computer vision","Data mining","Machine learning",
+                                    "Natural language processing","Pattern Recognition","World Wide Web","Speech recognition"
+                                    ,"Semantic web","Knowledge Graph","information retrieval"};
+            for(int i=0; i<area_ids.length;i++){
+                String userfield = request.getParameter(area_ids[i]);
                 if(userfield!=null && userfield.equals("true")){
                     userFieldsKey ufkey = new userFieldsKey();
                     ufkey.setUid(user.getId());
-                    ufkey.setFid(area_id);
+                    ufkey.setFid(area_ids[i]);
                     utService.insertRecord(ufkey);
+                    UserTagKey utag = new UserTagKey();
+                    utag.setTagname(EnglishName[i]);
+                    utag.setUid(area_ids[i]);
+                    utagService.insertUserAndTag(utag);
                 }
             }
             session.setAttribute(Constant.CURRENT_USER,user);
@@ -118,4 +140,6 @@ public class loginController {
 
         return  "/login/insertUserField";
     }
+
+
 }

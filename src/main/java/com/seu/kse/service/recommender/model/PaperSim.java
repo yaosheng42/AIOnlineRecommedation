@@ -36,7 +36,7 @@ public class PaperSim implements Comparable<PaperSim>, Serializable {
     }
 
     public int compareTo(PaperSim o) {
-        return Double.compare(o.sim,this.sim);
+        return Double.compare(this.sim,o.sim);
     }
 
 }

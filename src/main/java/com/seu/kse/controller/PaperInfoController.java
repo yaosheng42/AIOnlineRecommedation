@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.seu.kse.dao.PaperTagMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.dao.UserPaperQuestionMapper;
+import com.seu.kse.service.impl.UserPaperService;
 import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
 import com.seu.kse.bean.*;
@@ -41,7 +42,7 @@ public class PaperInfoController {
     @Resource
     private UserPaperQuestionMapper userPaperQuestionDao;
     @Resource
-    private UserPaperBehaviorMapper userPaperBehaviorDao;
+    private UserPaperService userPaperService;
     @Resource
     private PaperTagMapper paperTagDao;
     /**
@@ -116,12 +117,21 @@ public class PaperInfoController {
         model.addAttribute("authors",authorsOfpaper);
 
         if(login_user!=null) {
+            Byte yes = 1;
+            Byte no = 0;
            //UserPaperNoteKey keys = new UserPaperNoteKey(login_user.getId(),paper.getId());
             UserPaperNoteKey key = new UserPaperNoteKey(login_user.getId(),paper.getId());
             UserPaperNoteWithBLOBs paperNote = userPaperNoteDao.selectByPrimaryKey(key);
             //System.out.println(paperNotes.size());
             model.addAttribute("note",paperNote);
-
+            //修改用户-论文行为记录
+            UserPaperBehavior ub = new UserPaperBehavior();
+            ub.setUid(login_user.getId());
+            ub.setAuthor(no);
+            ub.setReaded(yes);
+            ub.setInterest(3);
+            ub.setPid(id);
+            userPaperService.insertObject(ub);
         }
         //标签
         List<String> tags=new ArrayList<String>();
@@ -143,6 +153,9 @@ public class PaperInfoController {
         model.addAttribute("authorMap",authorMap);
         model.addAttribute("refPapers",papers);
         model.addAttribute("tag",0);
+
+
+
         return "/paperinfo";
     }
     /**
@@ -213,7 +226,7 @@ public class PaperInfoController {
         UserPaperBehaviorKey keys = new UserPaperBehaviorKey();
         keys.setPid(id);
         keys.setUid(uid);
-        UserPaperBehavior user_papers = userPaperBehaviorDao.selectByPrimaryKey(keys);
+        UserPaperBehavior user_papers = userPaperService.selectByKey(keys);
         if(user_papers == null){
             //insert this record into user_paper
             user_papers=new UserPaperBehavior();
@@ -224,11 +237,11 @@ public class PaperInfoController {
             user_papers.setAuthor(no);
             user_papers.setInterest(score);
             user_papers.setReaded(yes);
-            userPaperBehaviorDao.insert(user_papers);
+            userPaperService.insertObject(user_papers);
         }else{
             // update this record into user_paper
             user_papers.setInterest(score);
-            userPaperBehaviorDao.updateByPrimaryKey(user_papers);
+            userPaperService.updateByPrimaryKey(user_papers);
         }
         if(id!=null) return "success";
         return "error";

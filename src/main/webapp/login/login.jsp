@@ -7,6 +7,8 @@ charset=UTF-8"
   String basePath = request.getScheme() + "://"
           + request.getServerName() + ":" + request.getServerPort()
           + path + "/";
+  String url = request.getParameter("next");
+
 %>
 <html>
 <head lang="en">
@@ -51,6 +53,7 @@ charset=UTF-8"
             <label>密码</label>
             <input id="password" name="password" type="password" placeholder="Password" class="form-control">
           </div>
+          <input id="next" name="next" type="hidden" value="<%=url%>">
           <%--<div class="form-group">
             <label>用户身份</label>
             <select name="utype" class="form-control">

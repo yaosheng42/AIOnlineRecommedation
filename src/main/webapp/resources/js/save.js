@@ -1,9 +1,9 @@
 function savePaper(paper_id,score,user_id,started){
-
+    var url = encodeURIComponent(window.location)
     console.dir(score);
     if(user_id=="" || user_id==undefined){
         if(confirm("请先登陆")){
-            window.location="./login/login.jsp";
+            window.location="./login/login.jsp".concat("?"+"next="+url);
         }
         $("#starScore"+score).attr("checked",false);
         return false;

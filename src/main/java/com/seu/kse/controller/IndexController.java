@@ -1,6 +1,8 @@
 package com.seu.kse.controller;
 
+import com.seu.kse.service.impl.TaggingService;
 import com.seu.kse.service.impl.UserPaperService;
+import com.seu.kse.service.retrieval.Retrieval;
 import com.seu.kse.util.Constant;
 import com.seu.kse.util.LogUtils;
 import com.seu.kse.util.Utils;
@@ -61,6 +63,9 @@ public class IndexController {
     @Resource
     private UserPaperService userPaperService;
 
+    @Resource
+    private TaggingService taggingService;
+
 //    @Resource
 //    private UserPaperNoteMapper userPaperNoteDao;
     private int limit = 20;
@@ -99,7 +104,10 @@ public class IndexController {
         model.addAttribute("tag",0);
         return "/index";
     }
-
+    @RequestMapping("/index")
+    public String processIndex(HttpServletRequest request,HttpSession session, Model model){
+        return toIndex(request,session,model);
+    }
 
     @Transactional
     @RequestMapping(value="/search",produces="text/plain;charset=UTF-8")
@@ -129,24 +137,8 @@ public class IndexController {
                 .setExplain(true).setFrom(pageNum*limit).setSize(limit).get();
 
         SearchHits hits = search_response.getHits();
-        List<Paper> papers = new ArrayList<Paper>();
-        for(SearchHit  hit : hits){
-            Paper paper = new Paper();
-            Map<String,Object> res = hit.getSourceAsMap();
-            paper.setPaperAbstract((String)res.get(Constant.ES_FIELD_ABSTRACT));
-            paper.setTitle((String)res.get(Constant.ES_FIELD_TITLE));
-            paper.setId((String)res.get(Constant.ES_FIELD_ID));
-            paper.setPublisher((String)res.get(Constant.ES_FIELD_PUBLISHER));
-            paper.setUrl((String)res.get(Constant.ES_FIELD_URL));
-            paper.setKeywords((String) res.get(Constant.ES_FIELD_KEYWORDS));
-            try {
-                paper.setTime(new SimpleDateFormat("yyyy-MM-dd").parse((String)res.get(Constant.ES_FIELD_TIME)));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            paper.setType((Integer) res.get(Constant.ES_FIELD_TYPE));
-            papers.add(paper);
-        }
+        List<Paper> papers = Retrieval.getPapers(hits);
+
         //获取收藏信息 默认得分为5
         User login = Utils.testLogin(session,model);
         Map<String,Boolean> startedMap = userPaperService.getUserPaperStarted(papers,login);
@@ -162,12 +154,19 @@ public class IndexController {
         model.addAttribute("tag",0);
         model.addAttribute("terms",terms);
         if(login!=null){
-            LogUtils.info("search : "+login.getId()+" "+terms,IndexController.class);
+            LogUtils.info(Constant.SEARCH_LOG_KEYWORD+Constant.SEARCH_LOG_SPILT+login.getId()+Constant.SEARCH_TAG_SPILT+terms,IndexController.class);
+
         }else{
-            LogUtils.info("search : visitor"+" "+terms,IndexController.class);
+            LogUtils.info(Constant.SEARCH_LOG_KEYWORD+Constant.SEARCH_LOG_SPILT+Constant.VISIT_ID+Constant.SEARCH_TAG_SPILT+terms,IndexController.class);
 
         }
+
         return "/index";
+    }
+
+
+    public boolean isTag(String tag){
+        return tag.length()>1;
     }
 
 

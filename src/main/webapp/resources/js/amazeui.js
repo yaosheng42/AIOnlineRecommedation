@@ -1804,7 +1804,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  // filter changed touches to only contain touches that exist in the collected target ids
+	  // interceptor changed touches to only contain touches that exist in the collected target ids
 	  i = 0;
 	  while (i < changedTouches.length) {
 	    if (targetIds[changedTouches[i].identifier]) {

@@ -53,6 +53,17 @@
         <property name="concurrent" value="false" />
     </bean>
 
+    <!--打标签-->
+    <bean id="taggingTask" class="com.seu.kse.quartz.TaggingTask" />
+    <bean id="jobDetail4" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="taggingTask" />
+        <property name="targetMethod" value="execute" />
+
+        <property name="concurrent" value="false" />
+    </bean>
+
+
+
     <bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail1" />
         <!--表达式，每 天 执行一次-->
@@ -62,7 +73,7 @@
     <bean id="trigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail2" />
         <!--表达式，每 天 执行一次-->
-        <property name="cronExpression" value="0 0 23 * * ?" />
+        <property name="cronExpression" value="0 0 5 * * ?" />
     </bean>
 
 
@@ -72,6 +83,11 @@
         <property name="cronExpression" value="0 0 0 * * ?"  />
     </bean>
 
+    <bean id="trigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="jobDetail3" />
+        <!--表达式，每 天 执行一次-->
+        <property name="cronExpression" value="0 0 6 * * ?"  />
+    </bean>
 
     <!--  总管理类如果将lazy-init='false'那么容器启动就会执行调度程序   -->
     <bean id="startQuertz" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false" >
@@ -81,7 +97,19 @@
                 <ref bean="trigger1" />
                 <ref bean="trigger2" />
                 <ref bean="trigger3" />
+                <ref bean="trigger4" />
             </list>
         </property>
     </bean>
+
+    <!-- 配置拦截器 -->
+    <mvc:interceptors>
+        <!-- 多个拦截器，按顺序执行 -->
+        <mvc:interceptor>
+            <mvc:mapping path="*"/> <!-- 拦截所有的url包括子url路径 -->
+            <bean class="com.seu.kse.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+        <!-- 其他拦截器 -->
+    </mvc:interceptors>
+
 </beans>

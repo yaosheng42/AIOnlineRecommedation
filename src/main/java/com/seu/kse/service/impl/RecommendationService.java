@@ -1,12 +1,10 @@
 package com.seu.kse.service.impl;
 
-import com.seu.kse.bean.Paper;
-import com.seu.kse.bean.User;
-import com.seu.kse.bean.UserPaperBehavior;
-import com.seu.kse.bean.UserPaperBehaviorKey;
+import com.seu.kse.bean.*;
 import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.dao.UserMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
+import com.seu.kse.dao.UserTagMapper;
 import com.seu.kse.email.EmailSender;
 import com.seu.kse.service.recommender.model.CB.CBKNNModel;
 import com.seu.kse.service.recommender.RecommenderCache;
@@ -34,12 +32,14 @@ public class RecommendationService {
     private final PaperMapper paperDao;
     private final UserMapper userDao;
     private final UserPaperBehaviorMapper userPaperBehaviorDao;
+    private final UserTagMapper userTagDao;
 
     @Autowired
-    public RecommendationService(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao) {
+    public RecommendationService(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao, UserTagMapper userTagDao) {
         this.paperDao = paperDao;
         this.userDao = userDao;
         this.userPaperBehaviorDao = userPaperBehaviorDao;
+        this.userTagDao = userTagDao;
         init();
     }
 
@@ -54,16 +54,11 @@ public class RecommendationService {
             List<User> users = userDao.getAllUser();
             LogUtils.info("user actions",RecommendationService.class);
             Map<String,List<UserPaperBehavior>> userPaperBehaviors = new HashMap<String, List<UserPaperBehavior>>();
-            for(User user : users){
-                List<UserPaperBehavior> userPaperBehavior = userPaperBehaviorDao.selectByUserID(user.getId());
-                userPaperBehaviors.put(user.getId(),userPaperBehavior);
-            }
+            Map<String, List<UserTagKey>> usersTag = new HashMap<String, List<UserTagKey>>();
+            setUserInformation(userPaperBehaviors, usersTag, users);
             //训练模型
             cmodel = new CBKNNModel(true,papers,1);
-            cmodel.model(papers,userPaperBehaviors,users,newPapers);
-
-
-
+            cmodel.model(papers,userPaperBehaviors,users,newPapers, usersTag);
             LogUtils.info("init complete",RecommendationService.class);
 
     }
@@ -78,17 +73,24 @@ public class RecommendationService {
         List<Paper> newPapers = paperDao.selectPaperOrderByTime(0,5,10);
         List<User> users = userDao.getAllUser();
         Map<String,List<UserPaperBehavior>> userPaperBehaviors = new HashMap<String, List<UserPaperBehavior>>();
-        for(User user : users){
-            List<UserPaperBehavior> userPaperBehavior = userPaperBehaviorDao.selectByUserID(user.getId());
-            userPaperBehaviors.put(user.getId(),userPaperBehavior);
-        }
+        Map<String, List<UserTagKey>> usersTag = new HashMap<String, List<UserTagKey>>();
 
+        setUserInformation(userPaperBehaviors, usersTag, users);
 
         cmodel = new CBKNNModel(true,papers,1);
-        cmodel.model(papers,userPaperBehaviors,users,newPapers);
+        cmodel.model(papers,userPaperBehaviors,users,newPapers,usersTag);
         LogUtils.info("model update complete !",RecommendationService.class);
     }
 
+    private void setUserInformation(Map<String,List<UserPaperBehavior>> userPaperBehaviors,
+                                   Map<String, List<UserTagKey>> usersTag, List<User> users){
+        for(User user : users){
+            List<UserPaperBehavior> userPaperBehavior = userPaperBehaviorDao.selectByUserID(user.getId());
+            userPaperBehaviors.put(user.getId(),userPaperBehavior);
+            List<UserTagKey> userTagKeys = userTagDao.selectByUser(user.getId());
+            usersTag.put(user.getId(),userTagKeys);
+        }
+    }
 
 
 

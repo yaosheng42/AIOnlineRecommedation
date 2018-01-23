@@ -1,3 +1,4 @@
+<%@ page import="java.net.URLEncoder" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
@@ -6,6 +7,19 @@
   Time: 15:48
   To change this template use File | Settings | File Templates.
 --%>
+<%
+    //获得当前url
+    String url_str = new String(request.getRequestURL());
+
+    String[] temp = url_str.split(".jsp");
+    url_str = temp[0];
+    //判断当前url是否有参数
+    if(request.getQueryString()!=null && !"".equals(request.getQueryString())){
+        url_str = url_str.concat("?" + request.getQueryString());
+    }
+    String url = URLEncoder.encode(url_str);
+
+%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head lang="en">
@@ -92,7 +106,7 @@
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li><a href="login/login.jsp">登陆</a></li>
+                        <li><a href="login/login.jsp?next=<%=url%>">登陆</a></li>
                     </c:otherwise>
                 </c:choose>
             </ul>
@@ -122,15 +136,15 @@
                     <%--SupportPaper(${paper.id})--%>
                     <div id="starBg" class="star_bg" style = "float:right">
                         <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
-                        <a href="#starScore1" id="stara1" class="star star_1" onclick="return SupportPaper('${paper.id}',1,'${LOGIN_USER.id}')" title="差"><label for="starScore1">差</label></a>
+                        <a href="#starScore1" id="stara1" class="star star_1" onclick="return SupportPaper('${paper.id}',1,'${LOGIN_USER.id}',<%=url%>)" title="差"><label for="starScore1">差</label></a>
                         <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
-                        <a href="#starScore2" id="stara2" class="star star_2" onclick="return SupportPaper('${paper.id}',2,'${LOGIN_USER.id}')" title="较差"><label for="starScore2">较差</label></a>
+                        <a href="#starScore2" id="stara2" class="star star_2" onclick="return SupportPaper('${paper.id}',2,'${LOGIN_USER.id}',<%=url%>)" title="较差"><label for="starScore2">较差</label></a>
                         <input type="radio" id="starScore3" class="score score_3" value="3" name="score">
-                        <a href="#starScore3" id="stara3" class="star star_3" onclick="return SupportPaper('${paper.id}',3,'${LOGIN_USER.id}')" title="普通"><label for="starScore3">普通</label></a>
+                        <a href="#starScore3" id="stara3" class="star star_3" onclick="return SupportPaper('${paper.id}',3,'${LOGIN_USER.id}',<%=url%>)" title="普通"><label for="starScore3">普通</label></a>
                         <input type="radio" id="starScore4" class="score score_4" value="4" name="score">
-                        <a href="#starScore4" id="stara4" class="star star_4" onclick="return SupportPaper('${paper.id}',4,'${LOGIN_USER.id}')" title="较好"><label for="starScore4">较好</label></a>
+                        <a href="#starScore4" id="stara4" class="star star_4" onclick="return SupportPaper('${paper.id}',4,'${LOGIN_USER.id}',<%=url%>)" title="较好"><label for="starScore4">较好</label></a>
                         <input type="radio" id="starScore5" class="score score_5" value="5" name="score">
-                        <a href="#starScore5" id="stara5" class="star star_5" onclick="return SupportPaper('${paper.id}',5,'${LOGIN_USER.id}')" title="好"><label for="starScore5">好</label></a>
+                        <a href="#starScore5" id="stara5" class="star star_5" onclick="return SupportPaper('${paper.id}',5,'${LOGIN_USER.id}',<%=url%>)" title="好"><label for="starScore5">好</label></a>
                     </div>
                 </div>
                 <div class="am-g blog-content" style="text-align: justify; font-size: 14px">

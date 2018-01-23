@@ -33,4 +33,11 @@
       </if>
     </trim>
   </insert>
+
+  <select id="selectByUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select *
+      FROM user_tag
+    WHERE uid = #{arg0}
+  </select>
+
 </mapper>

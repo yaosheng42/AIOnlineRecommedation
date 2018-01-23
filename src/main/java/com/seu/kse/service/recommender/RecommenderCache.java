@@ -16,18 +16,20 @@ import java.util.Map;
 public class RecommenderCache {
     //论文相似度矩阵
     public static INDArray paperSimilarityMatrix ;
+    //
+    public static INDArray paperMatrix;
 
-    //论文PID 映射
-    public static Map<String, Integer> paperIDMapRowID;
 
     //word2vec model
     public static Word2Vec word2vec;
 
     //row id 和 用户 ID映射表
-    public static List<String> userRowMapID;
+    public static Map<String,Integer> userMapRowID;
 
     //row id 和 论文 ID映射表
-    public static List<String> paperRowMapID ;
+    public static List<String> rowIDMappaperID;
+    //论文ID 映射 到 row id
+    public static Map<String,Integer> paperIDMapRowID ;
 
     //用户推荐列表
     public static Map<String, List<PaperSim>> userRecommend ;
@@ -37,5 +39,8 @@ public class RecommenderCache {
 
     //paper vec
     public static Map<String, double[]> paperVecs = new HashMap<String, double[]>();
+
+    //用户-论文 相似度矩阵
+    public static INDArray userPaperSimilarityMatrix ;
 
 }

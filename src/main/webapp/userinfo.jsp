@@ -208,7 +208,7 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">论文地址</label>
                         <div class="col-lg-10">
-                            <input id="paper_url2" type="url" placeholder="论文地址" class="form-control" value="">
+                            <input id="paper_url1" type="url" placeholder="论文地址" class="form-control" value="">
                         </div>
                     </div>
                     <div class="form-group">

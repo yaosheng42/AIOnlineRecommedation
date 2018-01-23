@@ -9,12 +9,11 @@ package com.seu.kse.service.recommender;
 
 import com.seu.kse.service.recommender.model.PaperSim;
 import com.seu.kse.util.Configuration;
+import com.seu.kse.util.Constant;
+import com.seu.kse.util.LogUtils;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by yaosheng on 2017/5/25.
@@ -22,7 +21,7 @@ import java.util.Map;
 public class ReccommendUtils {
     //根据论文的title 和摘要 计算论文相似度
 
-    public static List<String>  stopwords;
+    private static List<String>  stopwords;
 
     /**
      * 余弦相似度
@@ -107,17 +106,32 @@ public class ReccommendUtils {
     public static void generateSimilarPaperList(){
         for(Map.Entry<String, double[]> e1 : RecommenderCache.paperVecs.entrySet()){
             List<PaperSim> sims = new ArrayList<PaperSim>();
+            Queue<PaperSim> maxKPaper = new PriorityQueue<PaperSim>(Constant.SIM_NUM);
             String pid1 = e1.getKey();
             for(Map.Entry<String, double[]> e2 : RecommenderCache.paperVecs.entrySet()){
                 if(e1==e2) continue;
                 String pid2 = e2.getKey();
                 double sim = ReccommendUtils.cosinSimilarity(e1.getValue(),e2.getValue());
                 PaperSim paperSim = new PaperSim(pid2, sim);
-                sims.add(paperSim);
+                //sims.add(paperSim);
+                if(maxKPaper.size()<Constant.SIM_NUM){
+                    maxKPaper.add(paperSim);
+                }else{
+                    PaperSim lowest = maxKPaper.peek();
+                    if(paperSim.compareTo(lowest)>0){
+                        maxKPaper.poll();
+                        maxKPaper.add(paperSim);
+                    }
+                }
             }
-            Collections.sort(sims);
-            List<PaperSim> subSims =  new ArrayList<PaperSim>(sims.subList(0,20));
-            RecommenderCache.similarPaperList.put(pid1,subSims);
+            sims.addAll(maxKPaper);
+            Collections.reverse(sims);
+            RecommenderCache.similarPaperList.put(pid1,sims);
+            //Collections.sort(sims);
+            //List<PaperSim> subSims =  new ArrayList<PaperSim>(sims.subList(sims.size()-Constant.SIM_NUM,sims.size()));
+            //Collections.reverse(subSims);
+            //RecommenderCache.similarPaperList.put(pid1,subSims);
+
         }
     }
 
