@@ -16,7 +16,7 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
+
 
 
 import java.io.*;

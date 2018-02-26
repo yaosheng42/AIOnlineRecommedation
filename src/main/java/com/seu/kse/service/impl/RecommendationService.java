@@ -47,7 +47,7 @@ public class RecommendationService {
 
             LogUtils.info("init start",RecommendationService.class);
             LogUtils.info("read all paper",RecommendationService.class);
-            List<Paper> papers = paperDao.selectAllPaper();
+            List<Paper> papers = paperDao.selectLimitPaper(10000);
             LogUtils.info("read new paper",RecommendationService.class);
             List<Paper> newPapers = paperDao.selectPaperOrderByTime(0,5,10);
             LogUtils.info("read user",RecommendationService.class);
@@ -69,7 +69,7 @@ public class RecommendationService {
         //生产文件
         LogUtils.info("model update init!",RecommendationService.class);
 
-        List<Paper> papers = paperDao.selectAllPaper();
+        List<Paper> papers = paperDao.selectLimitPaper(10000);
         List<Paper> newPapers = paperDao.selectPaperOrderByTime(0,5,10);
         List<User> users = userDao.getAllUser();
         Map<String,List<UserPaperBehavior>> userPaperBehaviors = new HashMap<String, List<UserPaperBehavior>>();

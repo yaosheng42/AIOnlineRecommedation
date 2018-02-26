@@ -69,7 +69,7 @@
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
-    from paper limit #{arg0}
+    from paper ORDER BY time DESC limit #{arg0}
   </select>
 
 

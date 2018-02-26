@@ -11,6 +11,68 @@ public class Author {
 
     private String url;
 
+    private Integer publishNum;
+
+    private Integer citationNum;
+
+    private Integer Hindex;
+
+    private Double Pindex;
+
+    private String researchInterests;
+
+    public Integer getAminerIndex() {
+        return aminerIndex;
+    }
+
+    public void setAminerIndex(Integer aminerIndex) {
+        this.aminerIndex = aminerIndex;
+    }
+
+    private Integer aminerIndex;
+
+    public Integer getPublishNum() {
+        return publishNum;
+    }
+
+    public void setPublishNum(Integer publishNum) {
+        this.publishNum = publishNum;
+    }
+
+    public Integer getCitationNum() {
+        return citationNum;
+    }
+
+    public void setCitationNum(Integer citationNum) {
+        this.citationNum = citationNum;
+    }
+
+    public Integer getHindex() {
+        return Hindex;
+    }
+
+    public void setHindex(Integer hindex) {
+        Hindex = hindex;
+    }
+
+    public Double getPindex() {
+        return Pindex;
+    }
+
+    public void setPindex(Double pindex) {
+        Pindex = pindex;
+    }
+
+    public String getResearchInterests() {
+        return researchInterests;
+    }
+
+    public void setResearchInterests(String researchInterests) {
+        this.researchInterests = researchInterests;
+    }
+
+
+
     public String getUrl() {
         return url;
     }

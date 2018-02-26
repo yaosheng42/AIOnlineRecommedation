@@ -136,15 +136,15 @@
                     <%--SupportPaper(${paper.id})--%>
                     <div id="starBg" class="star_bg" style = "float:right">
                         <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
-                        <a href="#starScore1" id="stara1" class="star star_1" onclick="return SupportPaper('${paper.id}',1,'${LOGIN_USER.id}',<%=url%>)" title="差"><label for="starScore1">差</label></a>
+                        <a href="#starScore1" id="stara1" class="star star_1" onclick="return SupportPaper('${paper.id}',1,'${LOGIN_USER.id}','<%=url%>')" title="差"><label for="starScore1">差</label></a>
                         <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
-                        <a href="#starScore2" id="stara2" class="star star_2" onclick="return SupportPaper('${paper.id}',2,'${LOGIN_USER.id}',<%=url%>)" title="较差"><label for="starScore2">较差</label></a>
+                        <a href="#starScore2" id="stara2" class="star star_2" onclick="return SupportPaper('${paper.id}',2,'${LOGIN_USER.id}','<%=url%>')" title="较差"><label for="starScore2">较差</label></a>
                         <input type="radio" id="starScore3" class="score score_3" value="3" name="score">
-                        <a href="#starScore3" id="stara3" class="star star_3" onclick="return SupportPaper('${paper.id}',3,'${LOGIN_USER.id}',<%=url%>)" title="普通"><label for="starScore3">普通</label></a>
+                        <a href="#starScore3" id="stara3" class="star star_3" onclick="return SupportPaper('${paper.id}',3,'${LOGIN_USER.id}','<%=url%>')" title="普通"><label for="starScore3">普通</label></a>
                         <input type="radio" id="starScore4" class="score score_4" value="4" name="score">
-                        <a href="#starScore4" id="stara4" class="star star_4" onclick="return SupportPaper('${paper.id}',4,'${LOGIN_USER.id}',<%=url%>)" title="较好"><label for="starScore4">较好</label></a>
+                        <a href="#starScore4" id="stara4" class="star star_4" onclick="return SupportPaper('${paper.id}',4,'${LOGIN_USER.id}','<%=url%>')" title="较好"><label for="starScore4">较好</label></a>
                         <input type="radio" id="starScore5" class="score score_5" value="5" name="score">
-                        <a href="#starScore5" id="stara5" class="star star_5" onclick="return SupportPaper('${paper.id}',5,'${LOGIN_USER.id}',<%=url%>)" title="好"><label for="starScore5">好</label></a>
+                        <a href="#starScore5" id="stara5" class="star star_5" onclick="return SupportPaper('${paper.id}',5,'${LOGIN_USER.id}','<%=url%>')" title="好"><label for="starScore5">好</label></a>
                     </div>
                 </div>
                 <div class="am-g blog-content" style="text-align: justify; font-size: 14px">

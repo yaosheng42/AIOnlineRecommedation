@@ -7,9 +7,15 @@
     <result column="atype" property="atype" jdbcType="TINYINT" />
     <result column="organization" property="organization" jdbcType="VARCHAR" />
     <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="publishNum" property="publishNum" jdbcType="INTEGER"/>
+    <result column="citationNum" property="citationNum" jdbcType="INTEGER"/>
+    <result column="Hindex" property="Hindex" jdbcType="INTEGER"/>
+    <result column="Pindex" property="Pindex" jdbcType="DOUBLE"/>
+    <result column="researchInterests" property="researchInterests" jdbcType="VARCHAR"/>
+    <result column="aminerIndex" property="aminerIndex" jdbcType="INTEGER"/>
   </resultMap>
   <sql id="Base_Column_List" >
-    aid, authorName, atype, organization, url
+    aid, authorName, atype, organization, url, publishNum, citationNum, Hindex, Pindex, researchInterests, aminerIndex
   </sql>
 
   <select id="selectAidByAuthorName" resultType="java.lang.Integer" parameterType="java.lang.String">
@@ -30,9 +36,10 @@
   </delete>
   <insert id="insert" parameterType="com.seu.kse.bean.Author" >
     insert into author (aid, authorName, atype, 
-      organization,url)
+      organization,url,publishNum,citationNum,Hindex,Pindex,researchInterests,aminerIndex)
     values (#{aid,jdbcType=INTEGER}, #{authorname,jdbcType=VARCHAR}, #{atype,jdbcType=TINYINT}, 
-      #{organization,jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR})
+      #{organization,jdbcType=VARCHAR}, #{url, jdbcType=VARCHAR}, #{publishNum,jdbcType=INTEGER}, #{citationNum,jdbcType=INTEGER}
+      , #{Hindex,jdbcType=INTEGER}, #{Pindex,jdbcType=DOUBLE}, #{researchInterests,jdbcType=VARCHAR}, #{aminerIndex,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.seu.kse.bean.Author" >
     insert into author
@@ -52,6 +59,24 @@
       <if test="url != null" >
         url,
       </if>
+      <if test="publishNum != null" >
+        publishNum,
+      </if>
+      <if test="citationNum != null" >
+        citationNum,
+      </if>
+      <if test="Hindex != null" >
+        Hindex,
+      </if>
+      <if test="Pindex != null" >
+        Pindex,
+      </if>
+      <if test="researchInterests != null" >
+        researchInterests,
+      </if>
+      <if test="aminerIndex != null" >
+        aminerIndex,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="aid != null" >
@@ -68,6 +93,24 @@
       </if>
       <if test="url != null" >
         #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="publishNum != null" >
+        #{publishNum,jdbcType=INTEGER},
+      </if>
+      <if test="citationNum != null" >
+        #{citationNum,jdbcType=INTEGER},
+      </if>
+      <if test="Hindex != null" >
+        #{Hindex,jdbcType=INTEGER},
+      </if>
+      <if test="Pindex != null" >
+        #{Pindex,jdbcType=DOUBLE},
+      </if>
+      <if test="researchInterests != null" >
+        #{researchInterests,jdbcType=VARCHAR},
+      </if>
+      <if test="aminerIndex != null" >
+        #{aminerIndex,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -94,7 +137,13 @@
     set authorName = #{authorname,jdbcType=VARCHAR},
       atype = #{atype,jdbcType=TINYINT},
       organization = #{organization,jdbcType=VARCHAR},
-      url = #{url,jdbcType=VARCHAR}
+      url = #{url,jdbcType=VARCHAR},
+      publishNum = #{publishNum,jdbcType=INTEGER},
+      citationNum = #{citationNum,jdbcType=INTEGER},
+      Hindex = #{Hindex,jdbcType=INTEGER},
+      Pindex = #{Pindex,jdbcType=DOUBLE},
+      researchInterests = #{researchInterests,jdbcType=VARCHAR},
+      aminerIndex = #{aminerIndex,jdbcType=INTEGER}
     where aid = #{aid,jdbcType=INTEGER}
   </update>
 </mapper>

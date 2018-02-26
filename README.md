@@ -31,3 +31,13 @@
 ## 5. 数据库搭建
 
 ## 6. 爬虫程序定时启动设置
+
+## 7. 测试
+    1. com.seu.kse.service.impl.RecommenderService init方法中下列语句修改为：
+       
+       `
+       List<Paper> papers = paperDao.selectAllPaper();
+    
+       List<Paper> papers = paperDao.selectLimitPaper(100);
+       `
+       
