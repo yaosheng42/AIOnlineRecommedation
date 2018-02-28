@@ -109,7 +109,7 @@ public class loginController {
                     utService.insertRecord(ufkey);
                     UserTagKey utag = new UserTagKey();
                     utag.setTagname(EnglishName[i]);
-                    utag.setUid(area_ids[i]);
+                    utag.setUid(user.getId());
                     utagService.insertUserAndTag(utag);
                 }
             }
