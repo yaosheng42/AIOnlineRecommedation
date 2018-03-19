@@ -52,6 +52,15 @@ public class RecommederTask {
         LogUtils.info("结束推荐......",RecommederTask.class);
 
     }
+
+    public boolean isRecommend(String uid, String pid){
+        UserPaperBehaviorKey key = new UserPaperBehaviorKey();
+        key.setPid(pid);
+        key.setUid(uid);
+        UserPaperBehavior ub = userPaperBehaviorDao.selectByPrimaryKey(key);
+        return ub == null ;
+    }
+
     public void recommend(){
         LogUtils.info("recommend start !",RecommendationService.class);
         Byte yes =1;
@@ -71,6 +80,10 @@ public class RecommederTask {
             int pushNum = user.getPushnum();
             for(int i=0;i<pushNum;i++){
                 String paperID = val.get(i).getPid();
+                if(isRecommend(user.getId(),paperID)){
+                    pushNum++;
+                    continue;
+                }
                 Paper paper = paperDao.selectByPrimaryKey(paperID);
                 String paperTitle = paper.getTitle();
                 String paperURL = Constant.paperinfoURL + paperID;
