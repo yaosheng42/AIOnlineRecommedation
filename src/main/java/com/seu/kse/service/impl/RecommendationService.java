@@ -46,7 +46,7 @@ public class RecommendationService {
     public void init(){
 
             LogUtils.info("init start",RecommendationService.class);
-            LogUtils.info("read all paper",RecommendationService.class);
+            LogUtils.info("read all paper"   ,RecommendationService.class);
             List<Paper> papers = paperDao.selectLimitPaper(8000);
             LogUtils.info("read new paper",RecommendationService.class);
             List<Paper> newPapers = paperDao.selectPaperOrderByTime(0,5,10);

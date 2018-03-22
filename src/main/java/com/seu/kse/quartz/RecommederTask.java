@@ -58,7 +58,7 @@ public class RecommederTask {
         key.setPid(pid);
         key.setUid(uid);
         UserPaperBehavior ub = userPaperBehaviorDao.selectByPrimaryKey(key);
-        return ub == null ;
+        return ub != null ;
     }
 
     public void recommend(){
@@ -70,7 +70,7 @@ public class RecommederTask {
             User user = userDao.selectByEmail(email);
 
             if(Constant.isTest){
-                if(!(user.getUname() == "yaosheng")){
+                if(!(user.getUname().equals("yaosheng"))){
                     continue;
                 }
             }
@@ -79,6 +79,9 @@ public class RecommederTask {
             List<String> paperTitles = new ArrayList<String>();
             int pushNum = user.getPushnum();
             for(int i=0;i<pushNum;i++){
+                if(i>e.getValue().size()){
+                    break;
+                }
                 String paperID = val.get(i).getPid();
                 if(isRecommend(user.getId(),paperID)){
                     pushNum++;
