@@ -205,14 +205,12 @@
                         <a href="paperinfo?id=${p.id}">${p.title}</a></h4>
                     </span>
                         <c:forEach items="${authorMap.get(p.id)}" var="author" varStatus="a_loop">
-                            <c:choose>
-                                <c:when test="${! empty author.aid}">
-                                    <span><a style="text-decoration: none" href="author?id=${author.aid}"><u>${author.authorname.split(",")[0]}</u></a></span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span><a style="text-decoration: none" href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
-                                </c:otherwise>
-                            </c:choose>
+                            <c:if test="${! empty author.aid}">
+                                <span><a href="${author.url}"><u>${author.authorname.split(",")[0]}</u></a></span>
+                            </c:if>
+                            <c:if test="${empty author.aid}">
+                                <span><a href="#"><u>${author.authorname.split(",")[0]}</u></a></span>
+                            </c:if>
 
                         </c:forEach>
                         <span class="paper-time">

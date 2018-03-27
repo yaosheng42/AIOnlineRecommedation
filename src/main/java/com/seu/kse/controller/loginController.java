@@ -54,19 +54,31 @@ public class loginController {
             }
             Cookie userIDCookie = new Cookie(Constant.COOKIE_USER_ID,user.getId());
             Cookie userPSWCookie = new Cookie(Constant.COOKIE_USER_PSW,user.getUpassword());
+            userIDCookie.setMaxAge(60*60*24*30);
+            userIDCookie.setPath("/");
+            userPSWCookie.setMaxAge(60*60*24*30);
+            userPSWCookie.setPath("/");
             response.addCookie(userIDCookie);
             response.addCookie(userPSWCookie);
             session.setAttribute(Constant.CURRENT_USER,user);
         }
         // 获取原网址
         String next = request.getParameter("next");
-
-        if(next == null) next = "/";
+        if(next == null || next.equals("null")) next = "/";
         return "redirect:".concat(next);
     }
 
     @RequestMapping("/logout")
-    public String logout(HttpSession session){
+    public String logout( HttpServletRequest request, HttpServletResponse response ,HttpSession session){
+        User user = (User) request.getSession().getAttribute(Constant.CURRENT_USER);
+        Cookie userIDCookie = new Cookie(Constant.COOKIE_USER_ID,user.getId());
+        Cookie userPSWCookie = new Cookie(Constant.COOKIE_USER_PSW,user.getUpassword());
+        userPSWCookie.setMaxAge(0);
+        userPSWCookie.setPath("/");
+        userPSWCookie.setMaxAge(0);
+        userPSWCookie.setPath("/");
+        response.addCookie(userIDCookie);
+        response.addCookie(userPSWCookie);
         session.removeAttribute(Constant.CURRENT_USER);
         return "redirect:/login/login.jsp";
     }

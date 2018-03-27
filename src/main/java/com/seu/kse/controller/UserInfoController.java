@@ -122,10 +122,10 @@ public class UserInfoController {
         for(UserPaperBehavior up : userAndPapers){
             String pid = up.getPid();
             Paper paper =paperService.searchPaper(pid);
-            if(up.getReaded() == 1){
+            if(up.getReaded() == 1 && paper!=null){
                 hisPapers.add(paper);
             }
-            if(up.getAuthor() == 1){
+            if(up.getAuthor() == 1&& paper!=null){
                 writerPapers.add(paper);
             }
         }

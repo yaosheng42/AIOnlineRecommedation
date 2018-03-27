@@ -97,7 +97,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <c:choose>
                     <c:when test="${! empty LOGIN_USER}">
-                        <li id="dropdown-tab1" class="dropdown" onclick="activeDropDown('dropdown-tab1')">
+                        <li id="dropdown-tab1" class="dropdown" >
                             <a class="dropdown-toggle" href="#">
                                 <i class="icon-user"></i>
                                     ${LOGIN_USER.uname}
