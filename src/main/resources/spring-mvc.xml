@@ -73,20 +73,20 @@
     <bean id="trigger2" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail2" />
         <!--表达式，每 天 执行一次-->
-        <property name="cronExpression" value="0 0 5 * * ?" />
+        <property name="cronExpression" value="0 0 6 * * ?" />
     </bean>
 
 
     <bean id="trigger3" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail3" />
         <!--表达式，每 天 执行一次-->
-        <property name="cronExpression" value="0 0 0 * * ?"  />
+        <property name="cronExpression" value="0 0 7 * * ?"  />
     </bean>
 
     <bean id="trigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="jobDetail3" />
         <!--表达式，每 天 执行一次-->
-        <property name="cronExpression" value="0 0 6 * * ?"  />
+        <property name="cronExpression" value="0 0 8 * * ?"  />
     </bean>
 
     <!--  总管理类如果将lazy-init='false'那么容器启动就会执行调度程序   -->
