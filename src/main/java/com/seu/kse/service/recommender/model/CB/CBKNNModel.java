@@ -117,7 +117,7 @@ public class CBKNNModel {
                         continue;
                     }
                     double sim = ReccommendUtils.cosinSimilarity(his.getValue(),vec);
-                    everySim = (weight.get(his.getKey())-2) * sim;
+                    everySim = weight.get(his.getKey())* sim;
                     count++;
                 }
                 if(!readed){

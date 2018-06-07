@@ -49,7 +49,7 @@ public class RecommendationService {
 
             LogUtils.info("init start",RecommendationService.class);
             LogUtils.info("read all paper"   ,RecommendationService.class);
-            List<Paper> papers = paperDao.selectLimitArxiv(10000);
+            List<Paper> papers = paperDao.selectLimitArxiv(100);
             LogUtils.info("read new paper",RecommendationService.class);
             List<Paper> newPapers = paperDao.selectPaperOrderByTime(0,5,10);
             LogUtils.info("read user",RecommendationService.class);
