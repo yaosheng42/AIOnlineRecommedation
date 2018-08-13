@@ -12,7 +12,12 @@ public class TaggingTask {
         this.taggingService = taggingService;
         //taggingService.init();
     }
+
     public void execute(){
         taggingService.update();
     }
+    public void alltext(){
+        taggingService.init();
+    }
+
 }

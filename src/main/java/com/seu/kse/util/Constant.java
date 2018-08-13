@@ -10,7 +10,7 @@ public class Constant {
     public static String paperinfoURL = "http://"+URL+":8090/AIOnlineRecommendation/paperinfo?id=";
     public static String ES_INDEX = "reasearch_kg";
     public static String ES_TYPE = "paper";
-    public static String[] ES_SEARCH_FIELDS = {"title","paper_abstract"};
+    public static String[] ES_SEARCH_FIELDS = {"title","paper_abstract","content"};
 
 
     public static String ES_FIELD_ABSTRACT = "paper_abstract";

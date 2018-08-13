@@ -1,5 +1,6 @@
 package com.seu.kse.controller;
 
+import com.seu.kse.quartz.RecommederTask;
 import com.seu.kse.service.impl.TaggingService;
 import com.seu.kse.service.impl.UserPaperService;
 import com.seu.kse.service.retrieval.Retrieval;
@@ -83,6 +84,7 @@ public class IndexController {
         /*if(!Utils.testConnect()){
             return "/index";
         }*/
+
         User login = Utils.testLogin(session,model);
         int pageNum=0;
         if(request.getParameter("pageNum")!=null) {
@@ -108,6 +110,15 @@ public class IndexController {
     public String processIndex(HttpServletRequest request,HttpSession session, Model model){
         return toIndex(request,session,model);
     }
+
+
+    @RequestMapping("/tagpaper")
+    public String tagPaper(HttpServletRequest request,HttpSession session, Model model){
+        taggingService.init2();
+        return "";
+    }
+
+
 
     @Transactional
     @RequestMapping(value="/search",produces="text/plain;charset=UTF-8")

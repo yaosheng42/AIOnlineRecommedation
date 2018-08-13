@@ -18,7 +18,7 @@ import java.util.*;
  * Created by yaosheng on 2017/5/24.
  */
 
-@Service
+@Service("paperservice")
 public class PaperService {
 
     @Resource
@@ -194,5 +194,10 @@ public class PaperService {
         }
 
         return  res;
+    }
+//    选出 start 和 end 之间的数据
+    public List<Paper> selectLimitPaper(int start, int end){
+        List<Paper> papers = paperdao.selectSomePaper(start,end);
+        return papers;
     }
 }

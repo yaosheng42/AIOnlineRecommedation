@@ -8,6 +8,7 @@ import com.seu.kse.dao.PaperMapper;
 import com.seu.kse.dao.PaperTagMapper;
 import com.seu.kse.dao.TagMapper;
 import com.seu.kse.dao.UserTagMapper;
+import com.seu.kse.quartz.RecommederTask;
 import com.seu.kse.service.retrieval.Retrieval;
 import com.seu.kse.util.Constant;
 import com.seu.kse.util.LogUtils;
@@ -49,13 +50,45 @@ public class TaggingService {
         //更新所有论文的标签
         List<Tag> tags = tagDao.selectAllTag();
         for(Tag tag : tags){
+            LogUtils.info(tags.size()+" "+tag.getTagname(),RecommederTask.class);
             List<String> ids = getIDS(Retrieval.search(tag.getTagname(),0.8f,200));
             for(String id : ids){
+                LogUtils.info(ids.size()+id,RecommederTask.class);
                 PaperTagKey key = new PaperTagKey();
                 key.setTagname(tag.getTagname());
                 key.setPid(id);
                 try{
+                    LogUtils.info("存入paperTag......",RecommederTask.class);
                     paperTagDao.insert(key);
+//                    System.out.println(tag.getTagname()+"::"+id+" saved");
+                }catch (Exception e){
+                    LogUtils.error(e.getMessage(),this.getClass());
+                }
+
+            }
+        }
+    }
+
+
+
+    public void init2(){
+        //更新所有论文的标签
+        List<Tag> tags = tagDao.selectAllTag();
+        int tagssize = tags.size();
+        int i = 422;
+        for(;i < tagssize;i++){
+            Tag tag = tags.get(i);
+            LogUtils.info(tags.size()+" "+i+" "+tag.getTagname(),RecommederTask.class);
+            List<String> ids = getIDS(Retrieval.search(tag.getTagname(),0.9f,100));
+            for(String id : ids){
+                LogUtils.info(ids.size()+id,RecommederTask.class);
+                PaperTagKey key = new PaperTagKey();
+                key.setTagname(tag.getTagname());
+                key.setPid(id);
+                try{
+                    LogUtils.info("存入paperTag......",RecommederTask.class);
+                    paperTagDao.insert(key);
+//                    System.out.println(tag.getTagname()+"::"+id+" saved");
                 }catch (Exception e){
                     LogUtils.error(e.getMessage(),this.getClass());
                 }
@@ -125,7 +158,10 @@ public class TaggingService {
         calendar.add(Calendar.DATE,-1);
         Date yesterday = calendar.getTime();
         String yesterday_str = new SimpleDateFormat("yyyyMMdd").format(yesterday);
+//       搜索最新添加的标签,用于将最新的标签与论文连接
         List<Tag> tags = tagDao.selectTodayTag(Integer.parseInt(yesterday_str));
+//        提取所有的标签，用于将所有标签与论文连接
+//        List<Tag> tags = tagDao.selectAllTag();
         for(Tag tag : tags){
             terms.add(tag.getTagname());
         }

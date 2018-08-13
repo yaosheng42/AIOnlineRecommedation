@@ -3,7 +3,6 @@ package com.seu.kse.bean;
 import java.util.Date;
 
 public class Paper {
-
     public Paper(){
 
     }
@@ -18,30 +17,23 @@ public class Paper {
         this.paperAbstract = paperAbstract;
         this.url = url;
     }
-
     private String id;
-
-    private String title;
 
     private String keywords;
 
-    private Integer type;
-
     private String publisher;
 
-    private Date time;
-
-    private String paperAbstract;
+    private Integer type;
 
     private String url;
 
-    public String getUrl() {
-        return url;
-    }
+    private String paperAbstract;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+    private Date time;
+
+    private String title;
+
+    private String content;
 
     public String getId() {
         return id;
@@ -49,14 +41,6 @@ public class Paper {
 
     public void setId(String id) {
         this.id = id == null ? null : id.trim();
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title == null ? null : title.trim();
     }
 
     public String getKeywords() {
@@ -67,6 +51,14 @@ public class Paper {
         this.keywords = keywords == null ? null : keywords.trim();
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher == null ? null : publisher.trim();
+    }
+
     public Integer getType() {
         return type;
     }
@@ -75,12 +67,20 @@ public class Paper {
         this.type = type;
     }
 
-    public String getPublisher() {
-        return publisher;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPublisher(String publisher) {
-        this.publisher = publisher == null ? null : publisher.trim();
+    public void setUrl(String url) {
+        this.url = url == null ? null : url.trim();
+    }
+
+    public String getPaperAbstract() {
+        return paperAbstract;
+    }
+
+    public void setPaperAbstract(String paperAbstract) {
+        this.paperAbstract = paperAbstract == null ? null : paperAbstract.trim();
     }
 
     public Date getTime() {
@@ -91,11 +91,19 @@ public class Paper {
         this.time = time;
     }
 
-    public String getPaperAbstract() {
-        return paperAbstract;
+    public String getTitle() {
+        return title;
     }
 
-    public void setPaperAbstract(String paperAbstract) {
-        this.paperAbstract = paperAbstract == null ? null : paperAbstract.trim();
+    public void setTitle(String title) {
+        this.title = title == null ? null : title.trim();
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }

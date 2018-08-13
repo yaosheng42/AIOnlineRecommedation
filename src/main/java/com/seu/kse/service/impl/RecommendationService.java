@@ -6,6 +6,7 @@ import com.seu.kse.dao.UserMapper;
 import com.seu.kse.dao.UserPaperBehaviorMapper;
 import com.seu.kse.dao.UserTagMapper;
 import com.seu.kse.email.EmailSender;
+import com.seu.kse.quartz.RecommederTask;
 import com.seu.kse.service.recommender.model.CB.CBKNNModel;
 import com.seu.kse.service.recommender.RecommenderCache;
 import com.seu.kse.service.recommender.model.PaperSim;
@@ -15,6 +16,7 @@ import com.seu.kse.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,8 @@ public class RecommendationService {
     private final UserPaperBehaviorMapper userPaperBehaviorDao;
     private final UserTagMapper userTagDao;
     private final CBKNNModel cbknnModel;
+
+//    private final TaggingService taggingService;
 
     @Autowired
     public RecommendationService(PaperMapper paperDao, UserMapper userDao, UserPaperBehaviorMapper userPaperBehaviorDao, UserTagMapper userTagDao,CBKNNModel cbknnModel) {
@@ -55,6 +59,11 @@ public class RecommendationService {
             LogUtils.info("read user",RecommendationService.class);
             List<User> users = userDao.getAllUser();
             LogUtils.info("user actions",RecommendationService.class);
+//            LogUtils.info("开始打标签......",RecommederTask.class);
+////        System.out.println("为论文打标签");
+//            taggingService.init();
+////        System.out.println("标签完成");
+//            LogUtils.info("打标签完成......",RecommederTask.class);
             Map<String,List<UserPaperBehavior>> userPaperBehaviors = new HashMap<String, List<UserPaperBehavior>>();
             Map<String, List<UserTagKey>> usersTag = new HashMap<String, List<UserTagKey>>();
             setUserInformation(userPaperBehaviors, usersTag, users);

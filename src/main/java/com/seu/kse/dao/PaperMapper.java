@@ -1,18 +1,33 @@
 package com.seu.kse.dao;
 
 import com.seu.kse.bean.Paper;
+import com.seu.kse.bean.PaperExample;
+import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 public interface PaperMapper {
+    long countByExample(PaperExample example);
+
+    int deleteByExample(PaperExample example);
+
     int deleteByPrimaryKey(String id);
 
     int insert(Paper record);
 
     int insertSelective(Paper record);
 
+    List<Paper> selectByExampleWithBLOBs(PaperExample example);
+
+    List<Paper> selectByExample(PaperExample example);
+
     Paper selectByPrimaryKey(String id);
+
+    int updateByExampleSelective(@Param("record") Paper record, @Param("example") PaperExample example);
+
+    int updateByExampleWithBLOBs(@Param("record") Paper record, @Param("example") PaperExample example);
+
+    int updateByExample(@Param("record") Paper record, @Param("example") PaperExample example);
 
     int updateByPrimaryKeySelective(Paper record);
 
@@ -20,9 +35,11 @@ public interface PaperMapper {
 
     int updateByPrimaryKey(Paper record);
 
-    List<Paper> selectPaperOrderByTime(int pageNum, int limit,int type);
+//    人工加
+    List<Paper> selectPaperOrderByTime(int pageNum, int limit, int type);
 
-    List<Paper> selectTodayArxiv(int pageNum, int limit,int time,int type);
+    List<Paper> selectSomePaper(int start, int end);
+    List<Paper> selectTodayArxiv(int pageNum, int limit, int time, int type);
 
     List<Paper> selectTodayPaper(int time);
 

@@ -1,7 +1,9 @@
 package com.seu.kse.service.retrieval;
 
 import com.seu.kse.bean.Paper;
+import com.seu.kse.quartz.RecommederTask;
 import com.seu.kse.util.Constant;
+import com.seu.kse.util.LogUtils;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.TransportClient;
@@ -46,7 +48,7 @@ public class Retrieval {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            paper.setType((Integer) res.get(Constant.ES_FIELD_TYPE));
+            paper.setType(Integer.parseInt((String) res.get(Constant.ES_FIELD_TYPE)));
             papers.add(paper);
         }
         return papers;
@@ -59,14 +61,15 @@ public class Retrieval {
             client = new PreBuiltTransportClient(Settings.EMPTY).
                     addTransportAddress(new TransportAddress(InetAddress.getByName("120.78.165.80"), 9300));
             MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(terms, Constant.ES_SEARCH_FIELDS);
-
+            LogUtils.info("开始查询ES......",RecommederTask.class);
             SearchResponse search_response = client.prepareSearch(Constant.ES_INDEX)
                     .setTypes(Constant.ES_TYPE)
                     .setSearchType(SearchType.QUERY_THEN_FETCH)
                     .setQuery(multiMatchQueryBuilder)
                     .setExplain(true).setMinScore(minScore).setSize(limit).get();
-
-            return search_response.getHits();
+            SearchHits searchHits = search_response.getHits();
+            client.close();
+            return searchHits;
         } catch (UnknownHostException e) {
             e.printStackTrace();
             return null;
